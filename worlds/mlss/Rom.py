@@ -101,6 +101,62 @@ class MLSSPatchExtension(APPatchExtension):
         return stream.getvalue()
 
     @staticmethod
+    def chuckle_bean_visibility(caller: APProcedurePatch, rom: bytes):
+        options = json.loads(caller.get_file("options.json").decode("UTF-8"))
+        if options["chuckle_bean_visibility"] == 0:
+            return rom
+        stream = io.BytesIO(rom)
+
+        for location in [location for location in all_locations if location.itemType == 0]:
+            stream.seek(location.id - 6)
+            b = stream.read(1)
+            if b[0] == 0xA0 and options["chuckle_bean_visibility"] == 3:
+                if options["block_visibility"] == 2:
+                    stream.seek(location.id - 6)
+                    stream.write(bytes([0x10]))
+                else:
+                    stream.seek(location.id - 6)
+                    stream.write(bytes([0x00]))
+
+                if location.id == 0x39D941 or (0x39E0DA <= location.id <= 0x39E0F2) or location.id == 0x39DC35:
+                    stream.seek(2, 1)
+                    ypos = int.from_bytes(stream.read(1)) + 4
+                    stream.seek(-1, 1)
+                    stream.write(bytes([ypos, 0xC4, 0x10]))
+
+                else:
+                    stream.seek(2, 1)
+                    ypos = int.from_bytes(stream.read(1)) + 6
+                    stream.seek(-1, 1)
+                    stream.write(bytes([ypos, 0xC4, 0x10]))
+
+            if b[0] == 0xC0 and options["chuckle_bean_visibility"] == 3:
+                if options["block_visibility"] == 1:
+                    stream.seek(location.id - 6)
+                    stream.write(bytes([0x00]))
+                else:
+                    stream.seek(location.id - 6)
+                    stream.write(bytes([0x10]))
+
+                if location.id == 0x39E462:
+                    stream.write(bytes([0x18, 0x0A, 0x06, 0x06, 0x10]))
+
+                elif location.id == 0x39E6C2:
+                    stream.seek(2, 1)
+                    ypos = int.from_bytes(stream.read(1)) + 6
+                    stream.seek(-1, 1)
+                    stream.write(bytes([ypos, 0xC6, 0x10]))
+
+                else:
+                    stream.seek(2, 1)
+                    ypos = int.from_bytes(stream.read(1)) + 6
+                    stream.seek(-1, 1)
+                    stream.write(bytes([ypos, 0xC4, 0x10]))
+
+        return stream.getvalue()
+
+
+    @staticmethod
     def randomize_sounds(caller: APProcedurePatch, rom: bytes):
         options = json.loads(caller.get_file("options.json").decode("UTF-8"))
         if options["randomize_sounds"] != 1:
@@ -252,6 +308,7 @@ class MLSSProcedurePatch(APProcedurePatch, APTokenMixin):
         ("apply_tokens", ["token_data.bin"]),
         ("enemy_randomize", []),
         ("hidden_visible", []),
+        ("chuckle_bean_visibility", []),
         ("randomize_sounds", []),
         ("randomize_music", []),
     ]
@@ -269,6 +326,7 @@ def write_tokens(world: "MLSSWorld", patch: MLSSProcedurePatch) -> None:
         "randomize_sounds": world.options.randomize_sounds.value,
         "music_options": world.options.music_options.value,
         "block_visibility": world.options.block_visibility.value,
+        "chuckle_bean_visibility": world.options.chuckle_bean_visibility.value,
         "seed": world.multiworld.seed,
         "player": world.player,
     }

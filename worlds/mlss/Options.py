@@ -272,6 +272,25 @@ class ChuckleBeans(Choice):
     option_all = 2
     default = 2
 
+class ChuckleBeanVisibility(Choice):
+    """
+    This replaces what chuckle bean digspots look like.
+    Normal: Chuckle bean digspots will be vanilla.
+    All Visible: Hidden chuckle bean digspots will be turned visible.
+    All Hidden: Visible chuckle bean digspots will be turned invisible.
+    Blocks: Chuckle bean digspots are replaced with blocks. This changes logic.
+    Random Blocks: Chuckle bean digspots are either vanilla or blocks.
+    Random: Chuckle bean digspots can be visible, hidden, or turned into blocks.
+    """
+    display_name = "Chuckle Bean Visibility"
+    option_normal = 0
+    option_visible = 1
+    option_hidden = 2
+    option_blocks = 3
+    option_random_blocks = 4
+    option_random = 5
+    default = 0
+
 class Goal(Choice):
     """
     Vanilla: Complete jokes end with the required items and defeat Birdo to unlock Bowser's Castle.
@@ -320,6 +339,7 @@ class MLSSOptions(PerGameCommonOptions):
     harhalls_pants: Removed
     block_visibility: HiddenVisible
     chuckle_beans: ChuckleBeans
+    chuckle_bean_visibility: ChuckleBeanVisibility
     goal: Goal
     emblems_required: EmblemsRequired
     emblems_amount: EmblemsAmount

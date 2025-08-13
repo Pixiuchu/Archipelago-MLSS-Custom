@@ -18,6 +18,8 @@ def set_rules(world: "MLSSWorld", excluded):
                 continue
             if world.options.chuckle_beans == 0 or world.options.chuckle_beans == 1 and location.id in hidden:
                 continue
+            if world.options.chuckle_bean_visibility == 3:
+                continue
             add_rule(
                 world.get_location(location.name),
                 lambda state: StateLogic.canDig(state, world.player),
@@ -101,6 +103,83 @@ def set_rules(world: "MLSSWorld", excluded):
             world.get_location(LocationName.BeanbeanOutskirtsSRoom1Digspot2),
             lambda state: StateLogic.ultra(state, world.player) and StateLogic.thunder(state, world.player),
         )
+
+    if world.options.chuckle_bean_visibility == 3:
+        if world.options.chuckle_beans != 0:
+            add_rule(
+                world.get_location(LocationName.BeanbeanOutskirtsNRoom2Digspot),
+                lambda state: StateLogic.canDig(state, world.player)
+            )
+            add_rule(
+                world.get_location(LocationName.ChucklehuckWoodsRoom2Digspot),
+                lambda state: StateLogic.hammers(state, world.player)
+            )
+            add_rule(
+                world.get_location(LocationName.ChucklehuckWoodsPipeRoomDigspot1),
+                lambda state: StateLogic.hammers(state, world.player)
+            )
+            add_rule(
+                world.get_location(LocationName.ChucklehuckWoodsPipeRoomDigspot2),
+                lambda state: StateLogic.hammers(state, world.player)
+            )
+            add_rule(
+                world.get_location(LocationName.ChucklehuckWoodsRoom7Digspot1),
+                lambda state: StateLogic.hammers(state, world.player)
+            )
+            add_rule(
+                world.get_location(LocationName.ChucklehuckWoodsRoom7Digspot2),
+                lambda state: StateLogic.hammers(state, world.player)
+            )
+            add_rule(
+                world.get_location(LocationName.ChucklehuckWoodsNortheastOfChucklerootDigspot1),
+                lambda state: StateLogic.hammers(state, world.player)
+            )
+            add_rule(
+                world.get_location(LocationName.ChucklehuckWoodsNortheastOfChucklerootDigspot2),
+                lambda state: StateLogic.hammers(state, world.player)
+            )
+            add_rule(
+                world.get_location(LocationName.ChucklehuckWoodsNortheastOfChucklerootDigspot3),
+                lambda state: StateLogic.hammers(state, world.player)
+            )
+            add_rule(
+                world.get_location(LocationName.ChucklehuckWoodsNortheastOfChucklerootDigspot4),
+                lambda state: StateLogic.hammers(state, world.player)
+            )
+            add_rule(
+                world.get_location(LocationName.WoohooHooniversityEntranceToMiniMarioRoomDigspot1),
+                lambda state: StateLogic.hammers(state, world.player)
+            )
+            add_rule(
+                world.get_location(LocationName.WoohooHooniversityEntranceToMiniMarioRoom2Digspot),
+                lambda state: StateLogic.hammers(state, world.player)
+            )
+            add_rule(
+                world.get_location(LocationName.WoohooHooniversityMiniMarioPuzzleDigspot),
+                lambda state: StateLogic.hammers(state, world.player)
+            )
+            add_rule(
+                world.get_location(LocationName.TeeheeValleyPastUltraHammersDigspot1),
+                lambda state: StateLogic.ultra(state, world.player)
+            )
+            add_rule(
+                world.get_location(LocationName.TeeheeValleyPastUltraHammersDigspot3),
+                lambda state: StateLogic.ultra(state, world.player)
+            )
+
+        if world.options.chuckle_beans == 2:
+            add_rule(
+                world.get_location(LocationName.WoohooHooniversityEntranceToMiniMarioRoomDigspot2), #Hidden
+                lambda state: StateLogic.hammers(state, world.player)
+            )
+            add_rule(
+                world.get_location(LocationName.ChucklehuckWoodsWhiteFruitRoomDigspot3), #Hidden
+                lambda state: StateLogic.canDig(state, world.player)
+            )
+            add_rule(
+                world.get_location(LocationName.BeanbeanOutskirtsPipe2RoomDigspot), #Hidden
+                lambda state: StateLogic.canDig(state, world.player)
+            )
 
     if world.options.goal == 1 and not world.options.castle_skip:
         add_rule(

@@ -6166,7 +6166,7 @@ treasureList = [
     [0x0F9, 0x00, 0x04, 0x11, 0x06, 0x00, 0x10, 0x58, 0x00], # 0xD40E37, 0x000000, 0xFF - Gwarhar Lagoon Pipe to Oho Ocean Room Coin Block
 
 	[0x0FC, 0xC0, 0x08, 0x0D, 0x00, 0x00, 0x00, 0x58, 0x00], # 0xD40E4A, 0x39E396, 0x1E - Gwarhar Lagoon Massage Parlor Entrance Digspot
-    [0x0FC, 0x00, 0x09, 0x0C, 0x06, 0x04, 0x10, 0x58, 0x00], # 0xD40E52, 0x000000, 0xFF - Gwarhar Lagoon Massaga Parlor Entrance Coin Block
+    [0x0FC, 0x00, 0x09, 0x0C, 0x06, 0x04, 0x10, 0x58, 0x00], # 0xD40E52, 0x000000, 0xFF - Gwarhar Lagoon Massage Parlor Entrance Coin Block
 
 	[0x0FE, 0xA0, 0x02, 0x18, 0x00, 0x00, 0x00, 0x58, 0x00], # 0xD40E62, 0x39E3A6, 0x1E - Gwarhar Lagoon Past Hermie Digspot
 
@@ -6448,5 +6448,54 @@ treasureList = [
 
 	[0x1F6, 0xC0, 0x04, 0x0A, 0x00, 0x00, 0x00, 0x58, 0x00], # 0xD417BA, 0x39EC40, 0x1E - Beanbean Outskirts Pipe 2 Room Digspot
 
-	[0x1F7, 0xC0, 0x04, 0x0C, 0x00, 0x00, 0x00, 0x58, 0x00], # 0xD417C7, 0x39EC4D, x1E -  Beanbean Outskirts Pipe 4 Room Digspot
+	[0x1F7, 0xC0, 0x04, 0x0C, 0x00, 0x00, 0x00, 0x58, 0x00], # 0xD417C7, 0x39EC4D, 0x1E -  Beanbean Outskirts Pipe 4 Room Digspot
+]
+
+deactivate_object_blocks = [
+    0x2E7454,  # 0x018 Stardust Fields Room 2 Coin Block 4
+    0x2E7542,  # 0x019 Stardust Fields Room 3 Coin Block 3
+    0x2E7C64,  # 0x023 Stardust Fields Room 7 Coin Block 3
+    0x2E778A,  # 0x01B Stardust Fields Room 5 Coin Block 3
+    0x2EAE5A,  # 0x069 Hoohoo Village North Cave Room 2 Coin Block
+    0x2E9E56,  # 0x04E Hoohoo Mountain Base East of Bridge Room Coin Block
+    0x2EA2A2,  # 0x056 Hoohoo Mountain Base Grassy Area Coin Block
+    0x2E9B2C,  # 0x04A Hoohoo Mountain Fountain Room Coin Block
+    0x2EAFE4,  # 0x06C Hoohoo Mountain Base Boostatue Cave Coin Block 4
+    0x2E8B04,  # 0x039 Beanbean Castle Coin Block
+    0x2EB54C,  # 0x087 Chateau Barrel Room Coin Block
+    0x2EC70C,  # 0x0A2 Chucklehuck Woods Winkle Area Cave Coin Block 2
+    0x2EC4EE,  # 0x09E Winkle Area Coin Block
+    0x2EBC4E,  # 0x093 Chucklehuck Woods Room 7 Coin Block 2
+    0x2F3F34,  # 0x1E5 Woohoo Hooniversity Prototype Room 1 Block
+    0x2F3F8E,  # 0x1E6 Woohoo Hooniversity Prototype Room 2 Block 1
+    0x2F3FA2,  # 0x1E6 Woohoo Hooniversity Prototype Room 2 Block 2
+    0x2F3FB6,  # 0x1E6 Woohoo Hooniversity Prototype Room 2 Block 3
+    0x2F3FCA,  # 0x1E6 Woohoo Hooniversity Prototype Room 2 Block 4
+    0x2F4048,  # 0x1E7 Woohoo Hooniversity Prototype Room 3 Block 1
+    0x2F405C,  # 0x1E7 Woohoo Hooniversity Prototype Room 3 Block 2
+    0x2EDB9E,  # 0x0E4 Woohoo Hooniversity West of Star Room 4 Coin Block
+    0x2EDCEE,  # 0x0E7 Woohoo Hooniversity Entrance to Mini Mario Room 2 Coin Block
+    0x2ED99E,  # 0x0E0 Woohoo Hooniversity Barrel Puzzle Entrance Coin Block
+    0x2EE28E,  # 0x0EF Woohoo Hooniversity Past Cackletta Room 2 Coin Block
+    0x2EE2F2,  # 0x0F0 Woohoo Hooniversity Past Cackletta Room 3 Coin Block
+    0x2F6880,  # 0x0A8 Oho Oasis Outside Fire Palace Coin Block
+    0x2F6E98,  # 0x0B4 Oho Oasis Thunder Palace Coin Block
+    0x2EE392,  # 0x0F2 Airport Entrance Coin Block
+    0x2EE554,  # 0x0F4 Airport Eastside Coin Block
+    0x2EEC10,  # 0x11F Teehee Valley Room 2 Coin Block
+    0x2EEEEC,  # 0x131 S.S. Chuckola East of Entrance Coin Block
+    0x2FA372,  # 0x183 Fungitown Psycho Kamek House Coin Block
+    0x2F9EF8,  # 0x17D Fungitown Embassy Building Room 1 Coin Block
+    0x2F9FA2,  # 0x17E Fungitown Embassy Building Room 2 Coin Block
+    0x2F7D7E,  # 0x0FC Gwarhar Lagoon Massage Parlor Entrance Coin Block
+    0x2F7C22,  # 0x0F9 Gwarhar Lagoon Pipe to Oho Ocean Room Coin Block
+    0x2F80F6,  # 0x100 Gwarhar Lagoon Stone Bridge Room Coin Block
+    0x2EF5F4,  # 0x153 Joke's End West of First Boiler Room Coin Block
+    0x2EF946,  # 0x15A Joke's End Northeast of Boiler Room 2 Coin Block
+    0x2EF8F6,  # 0x159 Joke's End Northeast of Boiler Room 3 Coin Block
+    0x2F0354,  # 0x16F Joke's End Furnace Room 2 Coin Block
+    0x2F0500,  # 0x172 Joke's End North of Second Boiler Room Coin Block
+    0x2F1F4E,  # 0x1A6 Bowser's Castle Lemmy Room 1 Coin Block
+    0x2F256A,  # 0x1AF Bowser's Castle Roy Room 1 Coin Block
+    0x2F281C  # 0x1B2 Bowser's Castle Roy Room 4 Coin Block
 ]

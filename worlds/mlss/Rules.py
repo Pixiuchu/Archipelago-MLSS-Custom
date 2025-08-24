@@ -886,3 +886,180 @@ def set_rules(world: "MLSSWorld", excluded):
                 world.get_location(LocationName.JokesEndNorthofBridgeRoomCoinBlock),
                 lambda state: StateLogic.canCrash(state, world.player),
             )
+
+    if world.options.coins == 2:
+        add_rule(world.get_location("Beanbean Castle Coin Block"),
+                 lambda state: StateLogic.rose(state, world.player))
+
+        add_rule(world.get_location("Hoohoo Mountain Base Boostatue Cave Coin Block 4"),
+                 lambda state: StateLogic.super(state, world.player)
+                               or StateLogic.canCrash(state, world.player))
+
+        add_rule(world.get_location("Chateau Barrel Room Coin Block"),
+                 lambda state: StateLogic.brooch(state, world.player))
+
+        add_rule(world.get_location("Chucklehuck Woods Room 7 Coin Block 2"),
+                 lambda state: StateLogic.brooch(state, world.player)
+                               and StateLogic.hammers(state, world.player))
+
+        add_rule(world.get_location("Winkle Area Coin Block"),
+                 lambda state: StateLogic.brooch(state, world.player)
+                               and StateLogic.canDash(state, world.player))
+
+        add_rule(world.get_location("Chucklehuck Woods Winkle Area Cave Coin Block 2"),
+                 lambda state: StateLogic.brooch(state, world.player)
+                               and StateLogic.canDash(state, world.player))
+
+        add_rule(
+            world.get_location("Oho Oasis Outside Fire Palace Coin Block"),
+            lambda state: ((StateLogic.super(state, world.player)
+                            or StateLogic.canDash(state, world.player))
+                           and StateLogic.membership(state, world.player)
+                           and StateLogic.fire(state, world.player)) or
+                          (StateLogic.canMini(state, world.player)
+                           and StateLogic.canDig(state, world.player))
+        )
+
+        add_rule(world.get_location("Oho Oasis Thunder Palace Coin Block"),
+                 lambda state: ((StateLogic.super(state, world.player)
+                                 or StateLogic.canDash(state, world.player))
+                                and StateLogic.membership(state, world.player)
+                                and StateLogic.fire(state, world.player)) or
+                               (StateLogic.canMini(state, world.player)
+                                and StateLogic.canDig(state, world.player))
+                 )
+
+        add_rule(world.get_location("Woohoo Hooniversity Barrel Puzzle Entrance Coin Block"),
+                 lambda state: StateLogic.canMini(state, world.player)
+                               and StateLogic.canDig(state, world.player))
+
+        add_rule(world.get_location("Woohoo Hooniversity Entrance to Mini Mario Room 2 Coin Block"),
+                 lambda state: StateLogic.hammers(state, world.player))
+
+        add_rule(world.get_location("Woohoo Hooniversity Past Cackletta Room 2 Coin Block"),
+                 lambda state: StateLogic.canMini(state, world.player)
+                               and StateLogic.canDig(state, world.player))
+
+        add_rule(world.get_location("Woohoo Hooniversity Past Cackletta Room 3 Coin Block"),
+                 lambda state: StateLogic.canMini(state, world.player)
+                               and StateLogic.canDig(state, world.player))
+
+        add_rule(world.get_location("Airport Entrance Coin Block"),
+                 lambda state: StateLogic.thunder(state, world.player))
+
+        add_rule(world.get_location("Airport Eastside Coin Block"),
+                 lambda state: StateLogic.thunder(state, world.player))
+
+        add_rule(world.get_location("Gwarhar Lagoon Pipe to Oho Ocean Room Coin Block"),
+            lambda state: (StateLogic.fire(state, world.player) and StateLogic.membership(state, world.player))
+                          or StateLogic.surfable(state, world.player))
+
+        add_rule(world.get_location("Gwarhar Lagoon Massage Parlor Entrance Coin Block"),
+            lambda state: (StateLogic.fire(state, world.player) and StateLogic.membership(state, world.player))
+                          or StateLogic.surfable(state, world.player))
+
+        add_rule(world.get_location("Gwarhar Lagoon Stone Bridge Room Coin Block"), #DifficultLogic
+            lambda state: StateLogic.canDash(state, world.player)
+                          and (StateLogic.membership(state, world.player) or StateLogic.surfable(state, world.player)))
+
+        add_rule(world.get_location("Teehee Valley Room 2 Coin Block"),
+                 lambda state: StateLogic.super(state, world.player) or StateLogic.canDash(state, world.player))
+
+        add_rule(world.get_location("S.S. Chuckola East of Entrance Coin Block"),
+                 lambda state: StateLogic.super(state, world.player) or StateLogic.canDash(state, world.player))
+
+        add_rule(world.get_location("Joke's End West of First Boiler Room Coin Block"),
+            lambda state: StateLogic.ultra(state, world.player)
+                          and StateLogic.fire(state, world.player)
+                          and (StateLogic.membership(state, world.player)
+                               or (StateLogic.canDig(state, world.player) and StateLogic.canMini(state, world.player))),
+        )
+
+        add_rule(world.get_location("Joke's End Northeast of Boiler Room 3 Coin Block"), #DifficultLogic
+            lambda state: StateLogic.ultra(state, world.player)
+                          and StateLogic.fire(state, world.player)
+                          and (StateLogic.membership(state, world.player)
+                               or (StateLogic.canDig(state, world.player) and StateLogic.canMini(state, world.player))),
+        )
+
+        add_rule(world.get_location("Joke's End Northeast of Boiler Room 2 Coin Block"), #DifficultLogic
+            lambda state: StateLogic.ultra(state, world.player)
+                          and StateLogic.fire(state, world.player)
+                          and (StateLogic.membership(state, world.player)
+                               or (StateLogic.canDig(state, world.player) and StateLogic.canMini(state, world.player))),
+        )
+
+        add_rule(world.get_location("Joke's End Furnace Room 2 Coin Block"), #DifficultLogic
+            lambda state: StateLogic.ultra(state, world.player)
+                          and StateLogic.fire(state, world.player)
+                          and StateLogic.canDig(state, world.player)
+                          and (StateLogic.membership(state, world.player)
+                               or StateLogic.canMini(state, world.player)),
+        )
+
+        add_rule(world.get_location("Joke's End North of Second Boiler Room Coin Block"),  #DifficultLogic
+            lambda state: StateLogic.ultra(state, world.player)
+                          and StateLogic.fire(state, world.player)
+                          and StateLogic.canDig(state, world.player)
+                          and (StateLogic.membership(state, world.player)
+                               or StateLogic.canMini(state, world.player)),
+        )
+
+        add_rule(world.get_location("Fungitown Embassy Building Room 1 Coin Block"),
+                 lambda state: StateLogic.fungitown(state, world.player))
+
+        add_rule(world.get_location("Fungitown Embassy Building Room 2 Coin Block"),
+                 lambda state: StateLogic.fungitown(state, world.player))
+
+        add_rule(world.get_location("Fungitown Psycho Kamek House Coin Block"),
+                 lambda state: StateLogic.fungitown(state, world.player))
+
+
+        if not world.options.castle_skip and world.options.goal != "emblem_hunt":
+            add_rule(world.get_location("Bowser's Castle Lemmy Room 1 Coin Block"),
+                     lambda state: StateLogic.postJokes(state, world.player, world.options.goal.value))
+            if not world.options.difficult_logic:
+                add_rule(world.get_location("Bowser's Castle Lemmy Room 1 Coin Block"),
+                     lambda state: StateLogic.canCrash(state, world.player))
+
+            add_rule(world.get_location("Bowser's Castle Roy Room 1 Coin Block"),
+                     lambda state: StateLogic.postJokes(state, world.player, world.options.goal.value)
+                     and StateLogic.canMini(state, world.player)
+            and (StateLogic.canCrash(state, world.player) if not world.options.difficult_logic else
+                 StateLogic.thunder(state, world.player)))
+
+            add_rule(world.get_location("Bowser's Castle Roy Room 4 Coin Block"),
+                     lambda state: StateLogic.postJokes(state, world.player, world.options.goal.value)
+                     and StateLogic.canMini(state, world.player)
+            and (StateLogic.canCrash(state, world.player) if not world.options.difficult_logic else
+                 StateLogic.thunder(state, world.player)))
+
+        elif not world.options.castle_skip and world.options.goal == "emblem_hunt":
+            add_rule(world.get_location("Bowser's Castle Lemmy Room 1 Coin Block"),
+                     lambda state: state.has("Beanstar Emblems", world.player, world.options.emblems_required.value))
+
+            add_rule(world.get_location("Bowser's Castle Roy Room 1 Coin Block"),
+                     lambda state: state.has("Beanstar Emblems", world.player, world.options.emblems_required.value)
+            and StateLogic.thunder(state, world.player)
+            and StateLogic.canMini(state, world.player))
+
+            add_rule(world.get_location("Bowser's Castle Roy Room 4 Coin Block"),
+                     lambda state: state.has("Beanstar Emblems", world.player, world.options.emblems_required.value)
+            and StateLogic.thunder(state, world.player)
+            and StateLogic.canMini(state, world.player))
+
+        if not world.options.difficult_logic:
+            add_rule(world.get_location("Gwarhar Lagoon Stone Bridge Room Coin Block"),  # DifficultLogic
+                     lambda state: StateLogic.canCrash(state, world.player))
+
+            add_rule(world.get_location("Joke's End Northeast of Boiler Room 3 Coin Block"),  # DifficultLogic
+                     lambda state: StateLogic.canCrash(state, world.player))
+
+            add_rule(world.get_location("Joke's End Northeast of Boiler Room 2 Coin Block"),  # DifficultLogic
+                     lambda state: StateLogic.canCrash(state, world.player))
+
+            add_rule(world.get_location("Joke's End Furnace Room 2 Coin Block"),  # DifficultLogic
+                     lambda state: StateLogic.canCrash(state, world.player))
+
+            add_rule(world.get_location("Joke's End North of Second Boiler Room Coin Block"),  # DifficultLogic
+                     lambda state: StateLogic.canCrash(state, world.player))

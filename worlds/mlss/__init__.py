@@ -82,6 +82,7 @@ class MLSSWorld(World):
         if self.options.castle_skip:
             self.disabled_locations.update([location.name for location in bowsers + bowsersMini])
         if not self.options.coins:
+        if self.options.coins == 0:
             self.disabled_locations.update([location.name for location in coins])
 
     def create_regions(self) -> None:
@@ -135,7 +136,7 @@ class MLSSWorld(World):
         for item in itemList:
             if item.classification != ItemClassification.filler:
                 continue
-            if item.itemName == "5 Coins" and not self.options.coins:
+            if item.itemName == "5 Coins" and self.options.coins == 0:
                 continue
             freq = item_frequencies.get(item.itemName, 1)
             if self.options.chuckle_beans == 0:

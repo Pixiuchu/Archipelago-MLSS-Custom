@@ -771,7 +771,7 @@ def set_rules(world: "MLSSWorld", excluded):
             lambda state: StateLogic.canCrash(state, world.player),
         )
 
-    if world.options.coins:
+    if world.options.coins != 0:
         add_rule(
             world.get_location(LocationName.HoohooMountainBaseBooStatueCaveCoinBlock1),
             lambda state: StateLogic.canCrash(state, world.player) or StateLogic.super(state, world.player),

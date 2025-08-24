@@ -75,6 +75,7 @@ def create_regions(world: "MLSSWorld"):
     create_region(world, "Cackletta's Soul", cacklettas_soul)
 
     if world.options.coins:
+    if world.options.coins != 0:
         create_region(world, "Coins", coins)
 
     if not world.options.castle_skip:
@@ -86,7 +87,7 @@ def connect_regions(world: "MLSSWorld"):
     names: typing.Dict[str, int] = {}
 
     connect(world, names, "Menu", "Main Area")
-    if world.options.coins:
+    if world.options.coins != 0:
         connect(world, names, "Main Area", "Coins")
     connect(world, names, "Main Area", "BaseUltraRocks", lambda state: StateLogic.ultra(state, world.player))
     connect(world, names, "Main Area", "Chucklehuck Woods", lambda state: StateLogic.brooch(state, world.player))

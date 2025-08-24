@@ -186,7 +186,7 @@ class MLSSPatchExtension(APPatchExtension):
             0x2F405C, #0x1E7 Woohoo Hooniversity Prototype Room 3 Block 2
             0x2EDB9E, #0x0E4 Woohoo Hooniversity West of Star Room 4 Coin Block
             0x2EDCEE, #0x0E7 Woohoo Hooniversity Entrance to Mini Mario Room 2 Coin Block
-            0x2ED9EE, #0x0E0 Woohoo Hooniversity Barrel Puzzle Entrance Coin Block
+            0x2ED99E, #0x0E0 Woohoo Hooniversity Barrel Puzzle Entrance Coin Block
             0x2EE28E, #0x0EF Woohoo Hooniversity Past Cackletta Room 2 Coin Block
             0x2EE2F2, #0x0F0 Woohoo Hooniversity Past Cackletta Room 3 Coin Block
             0x2F6880, #0x0A8 Oho Oasis Outside Fire Palace Coin Block

@@ -288,7 +288,7 @@ class ChuckleBeanVisibility(Choice):
     option_hidden = 2
     option_blocks = 3
     option_random_blocks = 4
-    option_random = 5
+    option_random_all = 5
     default = 0
 
 class Goal(Choice):

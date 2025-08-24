@@ -81,7 +81,6 @@ class MLSSWorld(World):
             self.disabled_locations.update([location.name for location in all_locations if location.id in hidden])
         if self.options.castle_skip:
             self.disabled_locations.update([location.name for location in bowsers + bowsersMini])
-        if not self.options.coins:
         if self.options.coins == 0:
             self.disabled_locations.update([location.name for location in coins])
 

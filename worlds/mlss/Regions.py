@@ -74,7 +74,6 @@ def create_regions(world: "MLSSWorld"):
     create_region(world, "BaseUltraRocks", baseUltraRocks)
     create_region(world, "Cackletta's Soul", cacklettas_soul)
 
-    if world.options.coins:
     if world.options.coins != 0:
         create_region(world, "Coins", coins)
 

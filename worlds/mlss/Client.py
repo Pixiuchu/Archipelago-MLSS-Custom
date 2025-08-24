@@ -2,7 +2,7 @@ from typing import TYPE_CHECKING, Optional, Set, List, Dict
 import struct
 
 from NetUtils import ClientStatus
-from .Locations import roomCount, nonBlock, beanstones, roomException, shop, badge, pants, eReward
+from .Locations import roomCount, roomCountSpecial, nonBlock, beanstones, roomException, shop, badge, pants, eReward
 from .Items import items_by_id
 
 import asyncio
@@ -64,7 +64,7 @@ class MLSSClient(BizHawkClient):
         name = bytes([byte for byte in name_bytes if byte != 0]).decode("UTF-8")
         self.player_name = name
 
-        for i in range(59):
+        for i in range(64):
             self.checked_flags[i] = []
 
         return True
@@ -97,7 +97,7 @@ class MLSSClient(BizHawkClient):
             read_state = await bizhawk.read(
                 ctx.bizhawk_ctx,
                 [
-                    (0x4564, 59, "EWRAM"),
+                    (0x4564, 64, "EWRAM"),
                     (0x2330, 2, "IWRAM"),
                     (0x3FE0, 1, "IWRAM"),
                     (0x304A, 1, "EWRAM"),
@@ -228,7 +228,10 @@ class MLSSClient(BizHawkClient):
                     and_value = 1 << j
                     if byte & and_value != 0:
                         flag_id = byte_i * 8 + (j + 1)
-                        room, item = find_key(roomCount, flag_id)
+                        if ctx.slot_data["Coins"] == 2:
+                            room, item = find_key(roomCountSpecial, flag_id)
+                        else:
+                            room, item = find_key(roomCount, flag_id)
                         pointer_arr = await bizhawk.read(
                             ctx.bizhawk_ctx, [(ROOM_ARRAY_POINTER + ((room - 1) * 4), 4, "ROM")]
                         )

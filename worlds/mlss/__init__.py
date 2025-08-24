@@ -150,14 +150,8 @@ class MLSSWorld(World):
                 freq += 4
             filler_items += [item.itemName for _ in range(freq)]
 
-        print(len(filler_items))
-        print(freq)
         # And finally take as many fillers as we need to have the same amount of items and locations.
         remaining = len(all_locations) - len(required_items) - len(self.disabled_locations) - 5
-        print(len(all_locations))
-        print(len(required_items))
-        print(len(self.disabled_locations))
-        print(remaining)
         self.multiworld.itempool += [
             self.create_item(filler_item_name) for filler_item_name in self.random.sample(filler_items, remaining)
         ]

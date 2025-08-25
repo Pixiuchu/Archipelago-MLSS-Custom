@@ -8,7 +8,7 @@ from BaseClasses import Item, Location
 from settings import get_settings
 from worlds.Files import APProcedurePatch, APTokenMixin, APTokenTypes, APPatchExtension
 from .Items import item_table
-from .Locations import shop, badge, pants, location_table, all_locations
+from .Locations import shop, badge, pants, location_table, all_locations, specialCoins
 
 if TYPE_CHECKING:
     from . import MLSSWorld
@@ -389,7 +389,7 @@ def write_tokens(world: "MLSSWorld", patch: MLSSProcedurePatch) -> None:
         for address in all_enemies:
             patch.write_token(APTokenTypes.WRITE, address + 3, bytes([world.random.randint(0x0, 0x26)]))
 
-    if world.options.coins == 2:
+    if True:
         trsr_data = []
         trsr_pointer = []
         trsr_count = 0
@@ -416,14 +416,15 @@ def write_tokens(world: "MLSSWorld", patch: MLSSProcedurePatch) -> None:
                 trsr_data.append((trsr_countMemory * 8).to_bytes(2, "little"))
             curRoomID += 1
 
-        #print(b''.join(trsr_data).hex())
-        #print(b''.join(trsr_pointer).hex())
-
         patch.write_token(APTokenTypes.WRITE,0xD40000, b''.join(trsr_data))
         patch.write_token(APTokenTypes.WRITE,0x51FA00, b''.join(trsr_pointer))
 
-        for item in Data.deactivate_object_blocks[:]:
-            patch.write_token(APTokenTypes.WRITE, item, bytes([0xE0]))
+        if world.options.coins != 2:
+            for location in [location for location in all_locations if location in specialCoins]:
+                patch.write_token(APTokenTypes.WRITE, location.id - 5, bytes([0x70, 0x70]))
+        else:
+            for item in Data.deactivate_object_blocks[:]:
+                patch.write_token(APTokenTypes.WRITE, item, bytes([0xE0]))
 
     for location_name in location_table.keys():
         if location_name in world.disabled_locations:
@@ -431,10 +432,7 @@ def write_tokens(world: "MLSSWorld", patch: MLSSProcedurePatch) -> None:
         location = world.get_location(location_name)
         item = location.item
         address = [address for address in all_locations if address.name == location.name]
-        if world.options.coins != 2:
-            item_inject(world, patch, location.address, address[0].itemType, item)
-        else:
-            item_inject(world, patch, (address[0].special_id if address[0].itemType == 0 else location.address), address[0].itemType, item)
+        item_inject(world, patch, location.address, address[0].itemType, item)
 
         if "Shop" in location_name and "Coffee" not in location_name and item.player != world.player:
             desc_inject(world, patch, location, item)

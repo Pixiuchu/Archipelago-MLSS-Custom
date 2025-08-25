@@ -136,7 +136,6 @@ mainArea: typing.List[LocationData] = [
     LocationData("Hoohoo Mountain Fountain Room 2 Block", 0x39E8F5, 0xD41415, 0),
     LocationData("Hoohoo Mountain Past Hoohooros Connector Room Block", 0x39E912, 0xD41432, 0),
     LocationData("Outside Woohoo Hooniversity Block", 0x39E9B5, 0xD414D5, 0),
-    LocationData("Shop Starting Flag 2", 0x3C05F2, 0, 3),
     LocationData("Shop Starting Flag 1", 0x3C05F0, 0x3C05F0, 3),
     LocationData("Shop Starting Flag 2", 0x3C05F2, 0x3C05F2, 3),
     LocationData("Shop Starting Flag 3", 0x3C05F4, 0x3C05F4, 3),

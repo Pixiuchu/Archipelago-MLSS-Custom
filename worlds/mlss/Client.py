@@ -64,7 +64,7 @@ class MLSSClient(BizHawkClient):
         name = bytes([byte for byte in name_bytes if byte != 0]).decode("UTF-8")
         self.player_name = name
 
-        for i in range(64):
+        for i in range(65):
             self.checked_flags[i] = []
 
         return True
@@ -97,7 +97,7 @@ class MLSSClient(BizHawkClient):
             read_state = await bizhawk.read(
                 ctx.bizhawk_ctx,
                 [
-                    (0x4564, 64, "EWRAM"),
+                    (0x4564, 65, "EWRAM"),
                     (0x2330, 2, "IWRAM"),
                     (0x3FE0, 1, "IWRAM"),
                     (0x304A, 1, "EWRAM"),

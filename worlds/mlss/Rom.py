@@ -240,6 +240,37 @@ class MLSSPatchExtension(APPatchExtension):
 
         return stream.getvalue()
 
+    @staticmethod
+    def randomize_backgrounds(caller: APProcedurePatch, rom: bytes):
+        options = json.loads(caller.get_file("options.json").decode("UTF-8"))
+        stream = io.BytesIO(rom)
+        random.seed(options["seed"] + options["player"])
+
+        all_enemies = list(range(0x50300C, 0x50300C + 0x1741, 0x20))
+        for address in all_enemies:
+            stream.seek(address + 8, 0)
+            current_enemy = stream.read(1)
+            stream.seek(address + 3, 0)
+
+            if current_enemy in (0x9B, 0x9E): # Check for Roy and Morton (prevent unfair backgrounds)
+                if options["randomize_backgrounds"]:
+                    wavy_backgrounds = [0x02, 0x03, 0x05, 0x06, 0x0D, 0x22, 0x23, 0x24, 0x26]
+                    stream.write(bytes([random.choice(wavy_backgrounds)]))
+                elif current_enemy == 0x9B:
+                    stream.write(bytes([0x24]))
+                else:
+                    stream.write(bytes([0x23]))
+            elif current_enemy == 0x70: # Check for Wiggler (prevent unfair backgrounds)
+                if options["randomize_backgrounds"]:
+                    wavy_backgrounds = [0x01, 0x03, 0x05, 0x06, 0x07, 0x0C, 0x0D, 0x0E, 0x0F, 0x10, 0x11, 0x13, 0x14, 0x15, 0x16, 0x17, 0x18, 0x19, 0x1A, 0x20, 0x21, 0x23, 0x24, 0x25, 0x26, 0x27]
+                    stream.write(bytes([random.choice(wavy_backgrounds)]))
+                else:
+                    stream.write(bytes([0x0F]))
+            elif options["randomize_backgrounds"]:
+                stream.write(bytes([random.randint(0, 0x27)]))
+
+        return stream.getvalue()
+
 
 class MLSSProcedurePatch(APProcedurePatch, APTokenMixin):
     game = "Mario & Luigi Superstar Saga"
@@ -254,6 +285,7 @@ class MLSSProcedurePatch(APProcedurePatch, APTokenMixin):
         ("hidden_visible", []),
         ("randomize_sounds", []),
         ("randomize_music", []),
+        ("randomize_backgrounds", []),
     ]
 
     @classmethod
@@ -265,6 +297,7 @@ def write_tokens(world: "MLSSWorld", patch: MLSSProcedurePatch) -> None:
     options_dict = {
         "randomize_enemies": world.options.randomize_enemies.value,
         "randomize_bosses": world.options.randomize_bosses.value,
+        "randomize_backgrounds": world.options.randomize_backgrounds.value,
         "castle_skip": world.options.castle_skip.value,
         "randomize_sounds": world.options.randomize_sounds.value,
         "music_options": world.options.music_options.value,
@@ -325,11 +358,6 @@ def write_tokens(world: "MLSSWorld", patch: MLSSProcedurePatch) -> None:
 
     if world.options.music_options == 2:
         patch.write_token(APTokenTypes.WRITE, 0x19B118, bytes([0x0, 0x25]))
-
-    if world.options.randomize_backgrounds:
-        all_enemies = Data.enemies + Data.bosses
-        for address in all_enemies:
-            patch.write_token(APTokenTypes.WRITE, address + 3, bytes([world.random.randint(0x0, 0x26)]))
 
     for location_name in location_table.keys():
         if location_name in world.disabled_locations:

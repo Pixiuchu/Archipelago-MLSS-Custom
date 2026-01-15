@@ -6,7 +6,7 @@ class LocationName:
     StardustFields4Block1 = "Stardust Fields Room 4 Block 1"
     StardustFields4Block2 = "Stardust Fields Room 4 Block 2"
     StardustFields4Block3 = "Stardust Fields Room 4 Block 3"
-    StardustFields5Block = "Stardust Fields Room 5 Block"
+    StardustFields7Block = "Stardust Fields Room 7 Block"
     HoohooVillageHammerHouseBlock = "Hoohoo Village Hammer House Block"
     BeanbeanCastleTownWestsideHouseBlock1 = "Beanbean Castle Town Westside House Block 1"
     BeanbeanCastleTownWestsideHouseBlock2 = "Beanbean Castle Town Westside House Block 2"

@@ -512,6 +512,39 @@ sounds = [
     0x1a0da4,
 ]
 
+bros_values = [
+    0x4FE8DC,
+    0x4FE8F4,
+    0x4FE924,
+    0x4FE96C,
+    0x4FE9D8,
+    0x4FEA20,
+    0x4FEA38,
+    0x4FEA68
+]
+
+heal_values = [
+    [0x3BBDD8, 0x202F9C], # Mushroom
+    [0x3BBDE8, 0x202FCC], # Super Mushroom
+    [0x3BBDF8, 0x2031CC], # Ultra Mushroom
+    [0x3BBE18, 0x203014, 0x3BB810], # Nut
+    [0x3BBE28, 0x203040, 0x3BB818], # Super Nut
+    [0x3BBE38, 0x2031F4, 0x3BB860], # Ultra Nut; third value are addresses in the ROM that offset to where the text is in the ROM.
+    [0x3BBE58, 0x20308C], # Syrup
+    [0x3BBE68, 0x2030C0], # Super Syrup
+    [0x3BBE78, 0x203224], # Ultra Syrup
+]
+
+coffee_values = [
+    [0x3BBEF8, 0x2032FA], # Woohoo Blend, TRUE
+    [0x3BBF08, 0x203322], # Hoohoo Blend, TRUE
+    [0x3BBF18, 0x20334A], # Chuckle Blend, TRUE
+    [0x3BBF28, 0x203376], # Teehee Blend, TRUE
+    [0x3BBF38, 0x20339E, 0x3BB8A8], # Hoolumbian, FALSE; move back by one
+    [0x3BBF48, 0x2033C2, 0x3BB8B0], # Chuckoccino, FALSE; needs to be moved to a completely different place in ROM (Move to 0xD38000 ?)
+    [0x3BBF58, 0x2033EA, 0x3BB8B8], # Teeheespresso, FALSE; move back by one
+]
+
 vanilla = []
 
 azureHat = [

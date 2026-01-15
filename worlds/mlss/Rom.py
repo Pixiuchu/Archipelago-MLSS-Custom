@@ -271,6 +271,183 @@ class MLSSPatchExtension(APPatchExtension):
 
         return stream.getvalue()
 
+    @staticmethod
+    def randomize_bros_move_cost(caller: APProcedurePatch, rom: bytes):
+        options = json.loads(caller.get_file("options.json").decode("UTF-8"))
+        if options["randomize_bros_move_cost"] == 0: # Change setting: make it a choice, "none", "balanced", "fully_random"
+            return rom
+        stream = io.BytesIO(rom)
+        random.seed(options["seed"] + options["player"])
+
+        bp_list = Data.bros_values
+        current_move = 0
+        # 0: Splash Bros.       (4, 3)
+        # 1: Swing Bros.        (6, 4)
+        # 2: Chopper Bros.      (5, 3)
+        # 3: Fire Bros.         (6, 3)
+        # 4: Bounce Bros.       (4, 3)
+        # 5: Knockback Bros.    (5, 3)
+        # 6: Cyclone Bros.      (8, 4)
+        # 7: Thunder Bros.      (6, 4)
+        while current_move < len(bp_list):
+            stream.seek(bp_list[current_move])
+            if options["randomize_bros_move_cost"] == 3:
+                new_move_value1 = random.randint(1, 15)
+                new_move_value2 = random.randint(1, 15)
+            elif current_move in {0, 1, 3, 4}: # Splash, Swing, Fire and Bounce have the lowest cost
+                if options["randomize_bros_move_cost"] == 1:
+                    new_move_value2 = random.randint(1, 6)
+                    new_move_value1 = random.randint(new_move_value2 + 1, new_move_value2 + 3)
+                elif options["randomize_bros_move_cost"] == 2:
+                    new_move_value1 = random.randint(1, 6)
+                    new_move_value2 = random.randint(new_move_value1 + 1, new_move_value1 + 3)
+
+            elif current_move in {5, 7}: # Knockback Bros. and Thunder Bros. have medium cost
+                if options["randomize_bros_move_cost"] == 1:
+                    new_move_value2 = random.randint(2, 8)
+                    new_move_value1 = random.randint(new_move_value2 + 1, new_move_value2 + 4)
+                elif options["randomize_bros_move_cost"] == 2:
+                    new_move_value1 = random.randint(2, 8)
+                    new_move_value2 = random.randint(new_move_value1 + 1, new_move_value1 + 4)
+
+            else: # Chopper Bros. and Cyclone Bros. have the highest cost
+                if options["randomize_bros_move_cost"] == 1:
+                    new_move_value2 = random.randint(4, 10)
+                    new_move_value1 = random.randint(new_move_value2 + 2, new_move_value2 + 5)
+                elif options["randomize_bros_move_cost"] == 2:
+                    new_move_value1 = random.randint(4, 10)
+                    new_move_value2 = random.randint(new_move_value1 + 2, new_move_value1 + 5)
+
+            stream.write(bytes([new_move_value1, new_move_value2]))
+            current_move += 1
+
+        return stream.getvalue()
+
+    @staticmethod
+    def randomize_heal_item_value(caller: APProcedurePatch, rom: bytes):
+        options = json.loads(caller.get_file("options.json").decode("UTF-8"))
+        if options["randomize_heal_item_value"] == 0:
+            return rom
+        stream = io.BytesIO(rom)
+        random.seed(options["seed"] + options["player"])
+
+        item_list = Data.heal_values
+        current_item = 0
+
+        while current_item < len(item_list):
+            if options["randomize_heal_item_value"] == 1:
+                if current_item in {0, 3, 6}:
+                    heal_value1 = random.randint(1, 50)
+                    write_heal_value = heal_value1
+                elif current_item in {1, 4, 7}:
+                    heal_value2 = random.randint(heal_value1 + 5, heal_value1 + 49) # Max 99
+                    write_heal_value = heal_value2
+                else:
+                    heal_value3 = random.randint(heal_value2 + 5, heal_value2 + 51) # Max 150
+                    write_heal_value = heal_value3
+            else:
+                write_heal_value = random.randint(1, 150)
+
+            stream.seek(item_list[current_item][0])
+            stream.write(bytes([write_heal_value]))
+
+            if current_item in {0, 1, 2}:
+                mushroom_description = f"Recover {write_heal_value} HP."
+                stream.seek(item_list[current_item][1] - 8)
+                stream.write(mushroom_description.encode("ascii") + b'\x00')
+
+            elif current_item in {3, 4, 5}:
+                nut_description = f"Recover {write_heal_value} HP each."
+                stream.seek(item_list[current_item][1] - 9)
+                stream.write(nut_description.encode("ascii") + b'\x00')
+
+                # Only required for Nut due to the lack of room after the description; moves the description backwards by one byte.
+                # The following changes the offset to the new description location.
+                stream.seek(item_list[current_item][2])
+                new_offset = int.from_bytes(stream.read(1)) - 1
+                stream.seek(-1, 1)
+                stream.write(bytes([new_offset]))
+
+            else:
+                syrup_description = f"Recover {write_heal_value} Bros. points."
+                stream.seek(item_list[current_item][1] - 8)
+                stream.write(syrup_description.encode("ascii") + b'\x00')
+
+            current_item += 1
+
+        return stream.getvalue()
+
+    @staticmethod
+    def randomize_coffee_values(caller: APProcedurePatch, rom: bytes):
+        options = json.loads(caller.get_file("options.json").decode("UTF-8"))
+        if options["randomize_coffee_values"] == 0:
+            return rom
+        stream = io.BytesIO(rom)
+        random.seed(options["seed"] + options["player"])
+
+        coffee_list = Data.coffee_values
+        current_coffee = 0
+        temp_coffee_boolean = False
+
+        while current_coffee < len(coffee_list):
+            if options["randomize_coffee_values"] == 1:
+                if not temp_coffee_boolean:
+                    temp_coffee_boolean = True
+                    coffee_value1 = random.randint(1, 15)
+                    write_coffee_value = coffee_value1
+                elif current_coffee == 6:
+                    write_coffee_value = random.randint(coffee_value1 + 2, coffee_value1 + 7)
+            else:
+                write_coffee_value = random.randint(1, 15)
+
+            stream.seek(coffee_list[current_coffee][0])
+            stream.write(bytes([write_coffee_value]))
+
+            match current_coffee:
+                case 0:
+                    coffee_description = f"Starbeans Blend: +{write_coffee_value} HP"
+                    stream.seek(coffee_list[current_coffee][1] - 18)
+                    stream.write(coffee_description.encode("ascii") + b'\x00')
+                case 1:
+                    coffee_description = f"Starbeans Blend: +{write_coffee_value} BP"
+                    stream.seek(coffee_list[current_coffee][1] - 18)
+                    stream.write(coffee_description.encode("ascii") + b'\x00')
+                case 2:
+                    coffee_description = f"Starbeans Blend: +{write_coffee_value} SPEED"
+                    stream.seek(coffee_list[current_coffee][1] - 18)
+                    stream.write(coffee_description.encode("ascii") + b'\x00')
+                case 3:
+                    coffee_description = f"Starbeans Blend: +{write_coffee_value} STACHE"
+                    stream.seek(coffee_list[current_coffee][1] - 18)
+                    stream.write(coffee_description.encode("ascii") + b'\x00')
+                case 4:
+                    coffee_description = f"Starbeans Blend: +{write_coffee_value} POW" # Same as Nut, needs to be moved backwards due to no space
+                    stream.seek(coffee_list[current_coffee][1] - 19)
+                    stream.write(coffee_description.encode("ascii") + b'\x00')
+
+                    stream.seek(coffee_list[current_coffee][2])
+                    new_offset = int.from_bytes(stream.read(1)) - 1
+                    stream.seek(-1, 1)
+                    stream.write(bytes([new_offset]))
+                case 5:
+                    coffee_description = f"Starbeans Blend: +{write_coffee_value} DEF" # This one needed an entirely new spot because there was not even one single free byte
+                    stream.seek(0xD3F000)
+                    stream.write(coffee_description.encode("ascii") + b'\x00')
+                    stream.seek(coffee_list[current_coffee][2])
+                    stream.write(bytes([0x00, 0xF0, 0xD3, 0x08]))
+                case 6:
+                    coffee_description = f"Starbeans Blend: +{write_coffee_value} ???"
+                    stream.seek(coffee_list[current_coffee][1] - 19)
+                    stream.write(coffee_description.encode("ascii") + b'\x00')
+
+                    stream.seek(coffee_list[current_coffee][2])
+                    new_offset = int.from_bytes(stream.read(1)) - 1
+                    stream.seek(-1, 1)
+                    stream.write(bytes([new_offset]))
+
+            current_coffee += 1
+
+        return stream.getvalue()
 
 class MLSSProcedurePatch(APProcedurePatch, APTokenMixin):
     game = "Mario & Luigi Superstar Saga"
@@ -286,6 +463,9 @@ class MLSSProcedurePatch(APProcedurePatch, APTokenMixin):
         ("randomize_sounds", []),
         ("randomize_music", []),
         ("randomize_backgrounds", []),
+        ("randomize_bros_move_cost", []),
+        ("randomize_heal_item_value", []),
+        ("randomize_coffee_values", []),
     ]
 
     @classmethod
@@ -298,6 +478,9 @@ def write_tokens(world: "MLSSWorld", patch: MLSSProcedurePatch) -> None:
         "randomize_enemies": world.options.randomize_enemies.value,
         "randomize_bosses": world.options.randomize_bosses.value,
         "randomize_backgrounds": world.options.randomize_backgrounds.value,
+        "randomize_bros_move_cost": world.options.randomize_bros_move_cost.value,
+        "randomize_heal_item_value": world.options.randomize_heal_item_value.value,
+        "randomize_coffee_values": world.options.randomize_coffee_values.value,
         "castle_skip": world.options.castle_skip.value,
         "randomize_sounds": world.options.randomize_sounds.value,
         "music_options": world.options.music_options.value,

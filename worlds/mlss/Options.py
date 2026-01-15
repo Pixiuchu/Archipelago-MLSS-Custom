@@ -313,6 +313,48 @@ class EmblemsAmount(Range):
     range_end = 150
     default = 75
 
+class RandomizeBPCost(Choice):
+    """
+    Randomize how much BP Bros. Moves cost in battle.
+    Vanilla: Does not randomize Bros. Move cost.
+    Balanced: Modes 1 and 2 always cost more than Mode 3.
+    Reverse Balanced: Mode 3 always cost more than Modes 1 and 2.
+    Fully Random: It is fully random with zero balancing. Moves cost between 1 and 15 BP.
+
+    For both Balanced and Reverse Balanced, stronger moves cost more BP on average.
+    """
+    display_name = "Randomize Bros. Move Cost"
+    option_vanilla = 0
+    option_balanced = 1
+    option_reverse_balanced = 2
+    option_fully_random = 3
+    default = 0
+
+class RandomizeHealItemValue(Choice):
+    """
+    Randomize how much items heal you.
+    Vanilla: Does not randomize heal values.
+    Progressive: Better items heal more.
+    Fully Random: Heal values are fully random with zero balancing. Items heal between 10 and 150 HP/BP.
+    """
+    option_vanilla = 0
+    option_progressive = 1
+    option_fully_random = 2
+    display_name = "Randomize Heal Item Values"
+
+class RandomizeCoffeeValues(Choice):
+    """
+    Randomize how much coffee increase your stats.
+    Vanilla: Does not randomize coffee values.
+    Consistent: All coffee increase by the same value. Teeheespresso will give more than the other coffees.
+    Fully Random: All coffee have completely random values.
+    """
+    display_name = "Randomize Coffee Values"
+    option_vanilla = 0
+    option_consistent = 1
+    option_fully_random = 2
+    default = 0
+
 
 @dataclass
 class MLSSOptions(PerGameCommonOptions):
@@ -337,6 +379,9 @@ class MLSSOptions(PerGameCommonOptions):
     randomize_backgrounds: RandomizeBackgrounds
     scale_stats: ScaleStats
     xp_multiplier: XPMultiplier
+    randomize_bros_move_cost: RandomizeBPCost
+    randomize_heal_item_value: RandomizeHealItemValue
+    randomize_coffee_values: RandomizeCoffeeValues
     tattle_hp: TattleHp
     mario_color: MarioColor
     luigi_color: LuigiColor

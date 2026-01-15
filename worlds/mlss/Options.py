@@ -279,6 +279,13 @@ class ChuckleBeans(Choice):
     option_all = 2
     default = 2
 
+class RedGobletRequired(Toggle):
+    """
+    Choose whether hidden chuckle bean digspots, Bean Fruits and Beanstones logically require Red Goblet.
+    Tip: Mini Mario can find hidden digspots with an exclamation mark above his head, making these hidden digspots easier to find.
+    """
+    display_name = "Red Goblet Required"
+
 class Goal(Choice):
     """
     Vanilla: Complete jokes end with the required items and defeat Birdo to unlock Bowser's Castle.
@@ -335,7 +342,7 @@ class RandomizeHealItemValue(Choice):
     Randomize how much items heal you.
     Vanilla: Does not randomize heal values.
     Progressive: Better items heal more.
-    Fully Random: Heal values are fully random with zero balancing. Items heal between 10 and 150 HP/BP.
+    Fully Random: Heal values are fully random with zero balancing. Items heal between 5 and 150 HP/BP.
     """
     option_vanilla = 0
     option_progressive = 1
@@ -369,6 +376,7 @@ class MLSSOptions(PerGameCommonOptions):
     harhalls_pants: Removed
     block_visibility: HiddenVisible
     chuckle_beans: ChuckleBeans
+    red_goblet_required: RedGobletRequired
     goal: Goal
     emblems_required: EmblemsRequired
     emblems_amount: EmblemsAmount

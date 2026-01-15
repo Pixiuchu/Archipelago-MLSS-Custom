@@ -22,11 +22,21 @@ def set_rules(world: "MLSSWorld", excluded):
                 world.get_location(location.name),
                 lambda state: StateLogic.canDig(state, world.player),
             )
-        if "Beanstone" in location.name:
+            if world.options.chuckle_beans == 2 and world.options.red_goblet_required and location.id in hidden:
+                add_rule(
+                    world.get_location(location.name),
+                lambda state: StateLogic.canMini(state, world.player),
+                )
+        if "Beanstone" in location.name or ("Bean Fruit" in location.name and not "Bean Fruit 7" in location.name):
             add_rule(
                 world.get_location(location.name),
                 lambda state: StateLogic.canDig(state, world.player),
             )
+            if world.options.chuckle_beans == 2 and world.options.red_goblet_required:
+                add_rule(
+                    world.get_location(location.name),
+                lambda state: StateLogic.canMini(state, world.player),
+                )
         if "Shop" in location.name and "Coffee" not in location.name and location.name not in excluded:
             if "Badge" in location.name or "Pants" in location.name:
                 add_rule(
@@ -217,28 +227,12 @@ def set_rules(world: "MLSSWorld", excluded):
         lambda state: StateLogic.super(state, world.player),
     )
     add_rule(
-        world.get_location(LocationName.BeanbeanOutskirtsBeanFruit1),
-        lambda state: StateLogic.canDig(state, world.player),
-    )
-    add_rule(
-        world.get_location(LocationName.BeanbeanOutskirtsBeanFruit2),
-        lambda state: StateLogic.canDig(state, world.player),
-    )
-    add_rule(
-        world.get_location(LocationName.BeanbeanOutskirtsBeanFruit3),
-        lambda state: StateLogic.canDig(state, world.player),
-    )
-    add_rule(
         world.get_location(LocationName.BeanbeanOutskirtsBeanFruit4),
-        lambda state: StateLogic.super(state, world.player) and StateLogic.canDig(state, world.player),
+        lambda state: StateLogic.super(state, world.player),
     )
     add_rule(
         world.get_location(LocationName.BeanbeanOutskirtsBeanFruit5),
-        lambda state: StateLogic.super(state, world.player) and StateLogic.canDig(state, world.player),
-    )
-    add_rule(
-        world.get_location(LocationName.BeanbeanOutskirtsBeanFruit6),
-        lambda state: StateLogic.canDig(state, world.player),
+        lambda state: StateLogic.super(state, world.player),
     )
     add_rule(
         world.get_location(LocationName.BeanbeanOutskirtsBeanFruit7),

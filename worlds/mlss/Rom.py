@@ -337,16 +337,16 @@ class MLSSPatchExtension(APPatchExtension):
         while current_item < len(item_list):
             if options["randomize_heal_item_value"] == 1:
                 if current_item in {0, 3, 6}:
-                    heal_value1 = random.randint(1, 50)
+                    heal_value1 = random.randint(5, 50)
                     write_heal_value = heal_value1
                 elif current_item in {1, 4, 7}:
-                    heal_value2 = random.randint(heal_value1 + 5, heal_value1 + 49) # Max 99
+                    heal_value2 = random.randint(heal_value1 + 10, heal_value1 + 55) # Max 100
                     write_heal_value = heal_value2
                 else:
-                    heal_value3 = random.randint(heal_value2 + 5, heal_value2 + 51) # Max 150
+                    heal_value3 = random.randint(heal_value2 + 15, heal_value2 + 50) # Max 150
                     write_heal_value = heal_value3
             else:
-                write_heal_value = random.randint(1, 150)
+                write_heal_value = random.randint(5, 150)
 
             stream.seek(item_list[current_item][0])
             stream.write(bytes([write_heal_value]))

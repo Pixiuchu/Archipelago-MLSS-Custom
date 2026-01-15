@@ -6,7 +6,7 @@ import settings
 from BaseClasses import Tutorial, ItemClassification
 from worlds.AutoWorld import WebWorld, World
 from typing import Set, Dict, Any
-from .Locations import all_locations, location_table, bowsers, bowsersMini, hidden, coins
+from .Locations import all_locations, location_table, bowsers, bowsersMini, hidden, coins, specialCoins
 from .Options import MLSSOptions
 from .Items import MLSSItem, itemList, item_frequencies, item_table, mlss_item_name_groups
 from .Names.LocationName import LocationName
@@ -81,8 +81,10 @@ class MLSSWorld(World):
             self.disabled_locations.update([location.name for location in all_locations if location.id in hidden])
         if self.options.castle_skip:
             self.disabled_locations.update([location.name for location in bowsers + bowsersMini])
-        if not self.options.coins:
+        if self.options.coins == 0:
             self.disabled_locations.update([location.name for location in coins])
+        if self.options.coins != 2:
+            self.disabled_locations.update([location.name for location in specialCoins])
 
     def create_regions(self) -> None:
         create_regions(self)
@@ -135,7 +137,7 @@ class MLSSWorld(World):
         for item in itemList:
             if item.classification != ItemClassification.filler:
                 continue
-            if item.itemName == "5 Coins" and not self.options.coins:
+            if item.itemName == "5 Coins" and self.options.coins == 0:
                 continue
             freq = item_frequencies.get(item.itemName, 1)
             if self.options.chuckle_beans == 0:
@@ -144,6 +146,8 @@ class MLSSWorld(World):
             if self.options.chuckle_beans == 1:
                 if item.itemName == "Chuckle Bean":
                     freq -= 59
+            if self.options.coins == 2:
+                freq += 4
             filler_items += [item.itemName for _ in range(freq)]
 
         # And finally take as many fillers as we need to have the same amount of items and locations.

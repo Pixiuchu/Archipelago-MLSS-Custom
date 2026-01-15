@@ -8,7 +8,7 @@ from BaseClasses import Item, Location
 from settings import get_settings
 from worlds.Files import APProcedurePatch, APTokenMixin, APTokenTypes, APPatchExtension
 from .Items import item_table
-from .Locations import shop, badge, pants, location_table, all_locations
+from .Locations import shop, badge, pants, location_table, all_locations, specialCoins
 
 if TYPE_CHECKING:
     from . import MLSSWorld
@@ -358,6 +358,43 @@ def write_tokens(world: "MLSSWorld", patch: MLSSProcedurePatch) -> None:
 
     if world.options.music_options == 2:
         patch.write_token(APTokenTypes.WRITE, 0x19B118, bytes([0x0, 0x25]))
+
+    if True:
+        trsr_data = []
+        trsr_pointer = []
+        trsr_count = 0
+        trsr_total = 0
+        curRoomID = 0
+
+        while curRoomID < 512:
+            for sublist in Data.treasureList:
+                if sublist[0] == curRoomID:
+                    trsr_count += 1
+                    trsr_total += 1
+            trsr_countMemory = trsr_count
+            trsr_count = trsr_total - trsr_countMemory
+            while trsr_count < trsr_total:
+                for item in Data.treasureList[trsr_count][1:]:
+                    trsr_data.append(item.to_bytes())
+                trsr_count += 1
+            trsr_pointerCurrent = (len(b''.join(trsr_data)) + 0x08D40000).to_bytes(4, "little")
+            trsr_pointer.append(trsr_pointerCurrent)
+            trsr_count = 0
+            trsr_data.append(trsr_countMemory.to_bytes())
+            trsr_data.append((trsr_total - trsr_countMemory).to_bytes(2, "little"))
+            if trsr_countMemory > 0:
+                trsr_data.append((trsr_countMemory * 8).to_bytes(2, "little"))
+            curRoomID += 1
+
+        patch.write_token(APTokenTypes.WRITE,0xD40000, b''.join(trsr_data))
+        patch.write_token(APTokenTypes.WRITE,0x51FA00, b''.join(trsr_pointer))
+
+        if world.options.coins != 2:
+            for location in [location for location in all_locations if location in specialCoins]:
+                patch.write_token(APTokenTypes.WRITE, location.id - 5, bytes([0x70, 0x70]))
+        else:
+            for item in Data.deactivate_object_blocks[:]:
+                patch.write_token(APTokenTypes.WRITE, item, bytes([0xE0]))
 
     for location_name in location_table.keys():
         if location_name in world.disabled_locations:

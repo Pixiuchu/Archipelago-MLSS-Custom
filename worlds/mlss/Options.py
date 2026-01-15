@@ -230,12 +230,19 @@ class HiddenVisible(Choice):
     default = 0
 
 
-class Coins(Toggle):
+class Coins(Choice):
     """
-    Add all coin blocks in the game to the location pool.
+    Add coin blocks in the game to the location pool.
+    None: No coin blocks are added.
+    Regular: Only the regular coin blocks are added.
+    All: All coin blocks are added. This replaces the special coin blocks and the prototype blocks from Woohoo Hooniversity with regular randomized blocks.
     """
 
     display_name = "Coin Blocks"
+    option_none = 0
+    option_regular = 1
+    option_all = 2
+    default = 0
 
 
 class HarhallsPants(Toggle):

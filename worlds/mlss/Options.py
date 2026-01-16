@@ -1,4 +1,4 @@
-from Options import Choice, Toggle, StartInventoryPool, PerGameCommonOptions, Range, Removed
+from Options import Choice, Toggle, StartInventoryPool, PerGameCommonOptions, Range, Removed, OptionGroup
 from dataclasses import dataclass
 
 
@@ -10,14 +10,12 @@ class SkipBowsersCastle(Toggle):
 
     display_name = "Skip Bowser's Castle"
 
-
 class ExtraPipes(Toggle):
     """
     Gives the player access to pipes 1, 3, 4, and 6 from the start.
     """
 
     display_name = "Start With Extra Pipes"
-
 
 class SkipMinecart(Toggle):
     """
@@ -27,7 +25,6 @@ class SkipMinecart(Toggle):
 
     display_name = "Skip Minecart Minigame"
 
-
 class DisableSurf(Toggle):
     """
     Remove the surf minigame location from the location pool.
@@ -35,13 +32,15 @@ class DisableSurf(Toggle):
 
     display_name = "Disable Surf Minigame"
 
-
 class MusicOptions(Choice):
     """
     Choose if you want to randomize or disable music.
-    default: Music will be untouched.
-    randomize: Music will be randomized.
-    disable: All music will be disabled. No music will play throughout the entire game.
+
+    Default: Music will be untouched.
+
+    Randomize: Music will be randomized.
+
+    Disable: All music will be disabled. No music will play throughout the entire game.
     """
 
     display_name = "Music Options"
@@ -50,14 +49,12 @@ class MusicOptions(Choice):
     option_disable = 2
     default = 0
 
-
 class RandomSounds(Toggle):
     """
     Randomizes every sound in the game, minus a select few that can softlock the game.
     """
 
     display_name = "Randomize Sounds"
-
 
 class MarioColor(Choice):
     """
@@ -80,7 +77,6 @@ class MarioColor(Choice):
     option_true_chaos = 12
     default = 0
 
-
 class LuigiColor(Choice):
     """
     This changes the color of Luigi's hat, as well as some key colors that are green including UI etc.
@@ -102,7 +98,6 @@ class LuigiColor(Choice):
     option_true_chaos = 12
     default = 1
 
-
 class MarioPants(Choice):
     """
     This changes the color of Mario's trousers.
@@ -122,7 +117,6 @@ class MarioPants(Choice):
     option_white = 10
     option_chaos = 11
     default = 0
-
 
 class LuigiPants(Choice):
     """
@@ -144,13 +138,15 @@ class LuigiPants(Choice):
     option_chaos = 11
     default = 0
 
-
 class RandomizeEnemies(Choice):
     """
     Randomize all normal enemy encounters in the game.
     If Bowser's castle skip is enabled, then enemies from Bowser's Castle will not be included.
+
     Disabled: Enemies will not be randomized.
+
     Vanilla Groups: Vanilla enemy groups will be shuffled with each other. Custom enemy groups will not be made.
+
     Custom Groups: Custom enemy groups will be made and shuffled. Some enemy groups will only be semi-random,
     including groups with flying enemies or pestnuts in them.
     """
@@ -161,13 +157,16 @@ class RandomizeEnemies(Choice):
     option_custom_groups = 2
     default = 0
 
-
 class RandomizeBosses(Choice):
     """
     Randomize all boss encounters in the game.
     If Bowser's castle skip is enabled then bosses from Bowser's Castle will not be included.
     Some bosses are not randomized due to flags, and story (such as the final boss).
+
+    Disabled: Bosses will not be randomized.
+
     Boss Only: Bosses will only be swapped with another boss.
+
     Boss Normal: Bosses can be swapped with normal enemy encounters.
     """
 
@@ -177,16 +176,14 @@ class RandomizeBosses(Choice):
     option_boss_normal = 2
     default = 0
 
-
 class ScaleStats(Toggle):
     """
     This scales enemy HP, POW, DEF, and XP to vanilla values.
-    This setting is intended for use with the Enemy Randomizer and is Recommended to turn on.
+    This setting is intended for use with the Enemy Randomizer and is recommended to turn on.
     If you are not using the Enemy Randomizer the effects will be minimal.
     """
 
     display_name = "Scale Enemy Stats"
-
 
 class XPMultiplier(Range):
     """
@@ -198,14 +195,12 @@ class XPMultiplier(Range):
     range_end = 4
     default = 1
 
-
 class TattleHp(Toggle):
     """
     This will display the enemies' current and max health while in battle.
     """
 
     display_name = "Tattle HP"
-
 
 class RandomizeBackgrounds(Toggle):
     """
@@ -214,12 +209,14 @@ class RandomizeBackgrounds(Toggle):
 
     display_name = "Randomize Battle Backgrounds"
 
-
 class HiddenVisible(Choice):
     """
     This makes any hidden blocks in the game into regular item blocks and vice versa.
+
     Disabled: Hidden blocks will remain invisible.
+
     Hidden Visible: Hidden blocks will turn visible to the player.
+
     Blocks Invisible: All item blocks will turn invisible. Hidden blocks will also remain invisible.
     """
 
@@ -229,12 +226,14 @@ class HiddenVisible(Choice):
     option_blocks_invisible = 2
     default = 0
 
-
 class Coins(Choice):
     """
     Add coin blocks in the game to the location pool.
+
     None: No coin blocks are added.
+
     Regular: Only the regular coin blocks are added.
+
     All: All coin blocks are added. This replaces the special coin blocks and the prototype blocks from Woohoo Hooniversity with regular randomized blocks.
     """
 
@@ -244,14 +243,12 @@ class Coins(Choice):
     option_all = 2
     default = 0
 
-
 class HarhallsPants(Toggle):
     """
     This will remove the Harhall's Pants check from the pool.
     """
 
     display_name = "Remove Harhall's Pants"
-
 
 class DifficultLogic(Toggle):
     """
@@ -262,14 +259,16 @@ class DifficultLogic(Toggle):
 
     display_name = "Difficult Logic"
 
-
 class ChuckleBeans(Choice):
     """
     Choose how you want chuckle bean digspots to be randomized.
     An amount of chuckle beans will be removed from the item pool,
     equal to the amount of locations removed by the setting that you choose.
+
     None: No chuckle bean digspots will be added into the location pool.
+
     Only Visible: Only chuckle bean digspots clearly marked with an X will be added into the location pool.
+
     All: All chuckle bean digspots will be added into the location pool.
     """
 
@@ -308,7 +307,6 @@ class EmblemsRequired(Range):
     range_end = 100
     default = 50
 
-
 class EmblemsAmount(Range):
     """
     Number of Beanstar Emblems that are in the pool.
@@ -323,9 +321,13 @@ class EmblemsAmount(Range):
 class RandomizeBPCost(Choice):
     """
     Randomize how much BP Bros. Moves cost in battle.
+
     Vanilla: Does not randomize Bros. Move cost.
+
     Balanced: Modes 1 and 2 always cost more than Mode 3.
+
     Reverse Balanced: Mode 3 always cost more than Modes 1 and 2.
+
     Fully Random: It is fully random with zero balancing. Moves cost between 1 and 15 BP.
 
     For both Balanced and Reverse Balanced, stronger moves cost more BP on average.
@@ -340,8 +342,11 @@ class RandomizeBPCost(Choice):
 class RandomizeHealItemValue(Choice):
     """
     Randomize how much items heal you.
+
     Vanilla: Does not randomize heal values.
+
     Progressive: Better items heal more.
+
     Fully Random: Heal values are fully random with zero balancing. Items heal between 5 and 150 HP/BP.
     """
     option_vanilla = 0
@@ -352,8 +357,11 @@ class RandomizeHealItemValue(Choice):
 class RandomizeCoffeeValues(Choice):
     """
     Randomize how much coffee increase your stats.
+
     Vanilla: Does not randomize coffee values.
+
     Consistent: All coffee increase by the same value. Teeheespresso will give more than the other coffees.
+
     Fully Random: All coffee have completely random values.
     """
     display_name = "Randomize Coffee Values"
@@ -362,6 +370,42 @@ class RandomizeCoffeeValues(Choice):
     option_fully_random = 2
     default = 0
 
+mlss_option_groups = [
+    OptionGroup("Logic Options", [
+        Goal,
+        EmblemsRequired,
+        EmblemsAmount,
+        Coins,
+        ChuckleBeans,
+        RedGobletRequired,
+        SkipMinecart,
+        DisableSurf,
+        HarhallsPants,
+        SkipBowsersCastle,
+        DifficultLogic,
+    ]),
+    OptionGroup("Enemy Randomization", [
+        RandomizeEnemies,
+        RandomizeBosses,
+        ScaleStats,
+        XPMultiplier,
+        TattleHp,
+    ]),
+    OptionGroup("Extras", [
+        ExtraPipes,
+        HiddenVisible,
+        RandomizeBackgrounds,
+        RandomizeBPCost,
+        RandomizeHealItemValue,
+        RandomizeCoffeeValues,
+        MusicOptions,
+        RandomSounds,
+        MarioColor,
+        LuigiColor,
+        MarioPants,
+        LuigiPants,
+    ])
+]
 
 @dataclass
 class MLSSOptions(PerGameCommonOptions):

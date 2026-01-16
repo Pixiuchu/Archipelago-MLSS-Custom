@@ -7,7 +7,8 @@ from BaseClasses import Tutorial, ItemClassification
 from worlds.AutoWorld import WebWorld, World
 from typing import Set, Dict, Any
 from .Locations import all_locations, location_table, bowsers, bowsersMini, hidden, coins, specialCoins
-from .Options import MLSSOptions
+from .Options import MLSSOptions, mlss_option_groups
+from .Presets import mlss_options_presets
 from .Items import MLSSItem, itemList, item_frequencies, item_table, mlss_item_name_groups
 from .Names.LocationName import LocationName
 from .Client import MLSSClient
@@ -30,6 +31,8 @@ class MLSSWebWorld(WebWorld):
         )
     ]
 
+    option_groups = mlss_option_groups
+    options_presets = mlss_options_presets
 
 class MLSSSettings(settings.Group):
     class RomFile(settings.UserFilePath):

@@ -1,0 +1,71 @@
+from typing import Dict, Any
+
+minsanity = {
+  "block_visibility": "disabled",
+  "goal": "emblem_hunt",
+  "emblems_required": "25",
+  "emblems_amount": "50",
+  "coins": "none",
+  "chuckle_beans": "none",
+  "red_goblet_required": "true",
+  "skip_minecart": "true",
+  "disable_surf": "true",
+  "disable_harhalls_pants": "true",
+  "castle_skip": "true",
+  "difficult_logic": "false",
+  "randomize_enemies": "disabled",
+  "randomize_bosses": "disabled",
+  "scale_stats": "false",
+  "xp_multiplier": "1",
+  "tattle_hp": "false",
+  "extra_pipes": "false",
+  "randomize_backgrounds": "false",
+  "mario_color": "red",
+  "luigi_color": "green",
+  "mario_pants": "vanilla",
+  "luigi_pants": "vanilla",
+  "music_options": "default",
+  "randomize_sounds": "false",
+  "randomize_bros_move_cost": "vanilla",
+  "randomize_heal_item_value": "vanilla",
+  "randomize_coffee_values": "vanilla"    ,
+}
+
+balanced = {
+    "goal": "vanilla",
+    "coins": "regular",
+    "chuckle_beans": "only_visible",
+    "red_goblet_required": "false",
+    "skip_minecart": "true",
+    "disable_surf": "true",
+    "disable_harhalls_pants": "true",
+    "castle_skip": "false",
+    "difficult_logic": "false",
+    "tattle_hp": "true",
+    "extra_pipes": "true",
+    "block_visibility": "hidden_visible",
+}
+
+allsanity_max_difficulty = {
+    "goal": "emblem_hunt",
+    "emblems_required": 100,
+    "emblems_amount": 100,
+    "coins": "all",
+    "chuckle_beans": "all",
+    "red_goblet_required": False,
+    "skip_minecart": False,
+    "disable_surf": False,
+    "disable_harhalls_pants": False,
+    "castle_skip": False,
+    "difficult_logic": True,
+    "randomize_enemies": "custom_groups",
+    "randomize_bosses": "boss_normal",
+    "block_visibility": "blocks_invisible",
+    "randomize_bros_move_cost": "reverse_balanced",
+}
+
+mlss_options_presets: Dict[str, Dict[str, Any]] = {
+    "Minsanity": minsanity,
+    "Balanced": balanced,
+    "Allsanity - Max Difficulty": allsanity_max_difficulty,
+}

@@ -112,6 +112,23 @@ def set_rules(world: "MLSSWorld", excluded):
             lambda state: StateLogic.ultra(state, world.player) and StateLogic.thunder(state, world.player),
         )
 
+    if world.options.goal == 0 and not world.options.castle_skip:
+        add_rule(world.get_location("Bowser's Castle Lemmy Room 1 Coin Block"),
+                 lambda state: StateLogic.postJokes(state, world.player, world.options.goal.value)
+                 and StateLogic.canCrash(state, world.player) if not world.options.difficult_logic else True)
+
+        add_rule(world.get_location("Bowser's Castle Roy Room 1 Coin Block"),
+                 lambda state: StateLogic.postJokes(state, world.player, world.options.goal.value)
+                               and StateLogic.canMini(state, world.player)
+                               and StateLogic.canCrash(state, world.player) if not world.options.difficult_logic else
+                                    StateLogic.thunder(state, world.player))
+
+        add_rule(world.get_location("Bowser's Castle Roy Room 4 Coin Block"),
+                 lambda state: StateLogic.postJokes(state, world.player, world.options.goal.value)
+                               and StateLogic.canMini(state, world.player)
+                               and StateLogic.canCrash(state, world.player) if not world.options.difficult_logic else
+                                    StateLogic.thunder(state, world.player))
+
     if world.options.goal == 1 and not world.options.castle_skip:
         add_rule(
             world.get_location(LocationName.BowsersCastleRoyCorridorBlock1),
@@ -193,6 +210,18 @@ def set_rules(world: "MLSSWorld", excluded):
                           and StateLogic.canDash(state, world.player)
                           and StateLogic.canCrash(state, world.player)
         )
+        add_rule(world.get_location("Bowser's Castle Lemmy Room 1 Coin Block"),
+                 lambda state: state.has("Beanstar Emblem", world.player, world.options.emblems_required.value))
+
+        add_rule(world.get_location("Bowser's Castle Roy Room 1 Coin Block"),
+                 lambda state: state.has("Beanstar Emblem", world.player, world.options.emblems_required.value)
+                               and StateLogic.thunder(state, world.player)
+                               and StateLogic.canMini(state, world.player))
+
+        add_rule(world.get_location("Bowser's Castle Roy Room 4 Coin Block"),
+                 lambda state: state.has("Beanstar Emblem", world.player, world.options.emblems_required.value)
+                               and StateLogic.thunder(state, world.player)
+                               and StateLogic.canMini(state, world.player))
 
     add_rule(
         world.get_location(LocationName.HoohooVillageHammerHouseBlock),
@@ -930,38 +959,8 @@ def set_rules(world: "MLSSWorld", excluded):
                  lambda state: StateLogic.fungitown(state, world.player))
 
 
-        if not world.options.castle_skip and world.options.goal != "emblem_hunt":
-            add_rule(world.get_location("Bowser's Castle Lemmy Room 1 Coin Block"),
-                     lambda state: StateLogic.postJokes(state, world.player, world.options.goal.value))
-            if not world.options.difficult_logic:
-                add_rule(world.get_location("Bowser's Castle Lemmy Room 1 Coin Block"),
-                     lambda state: StateLogic.canCrash(state, world.player))
 
-            add_rule(world.get_location("Bowser's Castle Roy Room 1 Coin Block"),
-                     lambda state: StateLogic.postJokes(state, world.player, world.options.goal.value)
-                     and StateLogic.canMini(state, world.player)
-            and (StateLogic.canCrash(state, world.player) if not world.options.difficult_logic else
-                 StateLogic.thunder(state, world.player)))
 
-            add_rule(world.get_location("Bowser's Castle Roy Room 4 Coin Block"),
-                     lambda state: StateLogic.postJokes(state, world.player, world.options.goal.value)
-                     and StateLogic.canMini(state, world.player)
-            and (StateLogic.canCrash(state, world.player) if not world.options.difficult_logic else
-                 StateLogic.thunder(state, world.player)))
-
-        elif not world.options.castle_skip and world.options.goal == "emblem_hunt":
-            add_rule(world.get_location("Bowser's Castle Lemmy Room 1 Coin Block"),
-                     lambda state: state.has("Beanstar Emblems", world.player, world.options.emblems_required.value))
-
-            add_rule(world.get_location("Bowser's Castle Roy Room 1 Coin Block"),
-                     lambda state: state.has("Beanstar Emblems", world.player, world.options.emblems_required.value)
-            and StateLogic.thunder(state, world.player)
-            and StateLogic.canMini(state, world.player))
-
-            add_rule(world.get_location("Bowser's Castle Roy Room 4 Coin Block"),
-                     lambda state: state.has("Beanstar Emblems", world.player, world.options.emblems_required.value)
-            and StateLogic.thunder(state, world.player)
-            and StateLogic.canMini(state, world.player))
 
         if not world.options.difficult_logic:
             add_rule(world.get_location("Gwarhar Lagoon Stone Bridge Room Coin Block"),  # DifficultLogic

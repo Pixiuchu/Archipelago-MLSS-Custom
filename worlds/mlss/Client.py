@@ -247,7 +247,7 @@ class MLSSClient(BizHawkClient):
                             self.checked_flags[byte_i] += [j]
                             locs_to_send.add(pointer)
 
-            if not ctx.finished_game and cackletta != 0 and current_room == 0x1C7:
+            if not ctx.finished_game and cackletta != 0 and current_room == 0x1DE:
                 await ctx.send_msgs([{"cmd": "StatusUpdate", "status": ClientStatus.CLIENT_GOAL}])
 
             if self.room != current_room:

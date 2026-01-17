@@ -522,10 +522,12 @@ def write_tokens(world: "MLSSWorld", patch: MLSSProcedurePatch) -> None:
     if world.options.castle_skip:
         patch.write_token(APTokenTypes.WRITE, 0x3AEAB0, bytes([0xC1, 0x67, 0x0, 0x6, 0x1C, 0x08, 0x3]))
         patch.write_token(APTokenTypes.WRITE, 0x3AEC18, bytes([0x89, 0x65, 0x0, 0xE, 0xA, 0x08, 0x1]))
+        patch.write_token(APTokenTypes.WRITE, 0xD00012, bytes([world.options.castle_skip.value]))
 
     if world.options.skip_minecart:
         patch.write_token(APTokenTypes.WRITE, 0x3AC728, bytes([0x89, 0x13, 0x0, 0x10, 0xF, 0x08, 0x1]))
         patch.write_token(APTokenTypes.WRITE, 0x3AC56C, bytes([0x49, 0x16, 0x0, 0x8, 0x8, 0x08, 0x1]))
+        patch.write_token(APTokenTypes.WRITE, 0xD00013, bytes([world.options.skip_minecart.value]))
 
     if world.options.scale_stats:
         patch.write_token(APTokenTypes.WRITE, 0xD00002, bytes([0x1]))
@@ -542,42 +544,26 @@ def write_tokens(world: "MLSSWorld", patch: MLSSProcedurePatch) -> None:
     if world.options.music_options == 2:
         patch.write_token(APTokenTypes.WRITE, 0x19B118, bytes([0x0, 0x25]))
 
-    if True:
-        trsr_data = []
-        trsr_pointer = []
-        trsr_count = 0
-        trsr_total = 0
-        curRoomID = 0
+    if world.options.coins != 0:
+        patch.write_token(APTokenTypes.WRITE, 0xD00010, bytes([world.options.coins.value]))
 
-        while curRoomID < 512:
-            for sublist in Data.treasureList:
-                if sublist[0] == curRoomID:
-                    trsr_count += 1
-                    trsr_total += 1
-            trsr_countMemory = trsr_count
-            trsr_count = trsr_total - trsr_countMemory
-            while trsr_count < trsr_total:
-                for item in Data.treasureList[trsr_count][1:]:
-                    trsr_data.append(item.to_bytes())
-                trsr_count += 1
-            trsr_pointerCurrent = (len(b''.join(trsr_data)) + 0x08D40000).to_bytes(4, "little")
-            trsr_pointer.append(trsr_pointerCurrent)
-            trsr_count = 0
-            trsr_data.append(trsr_countMemory.to_bytes())
-            trsr_data.append((trsr_total - trsr_countMemory).to_bytes(2, "little"))
-            if trsr_countMemory > 0:
-                trsr_data.append((trsr_countMemory * 8).to_bytes(2, "little"))
-            curRoomID += 1
+    if world.options.difficult_logic:
+        patch.write_token(APTokenTypes.WRITE, 0xD00011, bytes([world.options.difficult_logic.value]))
 
-        patch.write_token(APTokenTypes.WRITE,0xD40000, b''.join(trsr_data))
-        patch.write_token(APTokenTypes.WRITE,0x51FA00, b''.join(trsr_pointer))
+    if world.options.disable_surf:
+        patch.write_token(APTokenTypes.WRITE, 0xD00014, bytes([world.options.disable_surf.value]))
 
-        if world.options.coins != 2:
-            for location in [location for location in all_locations if location in specialCoins]:
-                patch.write_token(APTokenTypes.WRITE, location.id - 5, bytes([0x70, 0x70]))
-        else:
-            for item in Data.deactivate_object_blocks[:]:
-                patch.write_token(APTokenTypes.WRITE, item, bytes([0xE0]))
+    if world.options.disable_harhalls_pants:
+        patch.write_token(APTokenTypes.WRITE, 0xD00015, bytes([world.options.disable_harhalls_pants]))
+
+    if world.options.chuckle_beans != 0:
+        patch.write_token(APTokenTypes.WRITE, 0xD00016, bytes([world.options.chuckle_beans.value]))
+
+    if world.options.red_goblet_required:
+        patch.write_token(APTokenTypes.WRITE, 0xD00017, bytes([world.options.red_goblet_required.value]))
+
+    if world.options.randomize_bosses != 0:
+        patch.write_token(APTokenTypes.WRITE, 0xD00018, bytes([world.options.randomize_bosses.value]))
 
     for location_name in location_table.keys():
         if location_name in world.disabled_locations:
@@ -594,8 +580,46 @@ def write_tokens(world: "MLSSWorld", patch: MLSSProcedurePatch) -> None:
     swap_colors(world, patch, world.options.mario_color.value, 0)
     swap_colors(world, patch, world.options.luigi_color.value, 1)
 
+    move_blocks(world, patch)
+
     patch.write_file("token_data.bin", patch.get_token_binary())
 
+def move_blocks(world: "MLSSWorld", patch: MLSSProcedurePatch):
+    trsr_data = []
+    trsr_pointer = []
+    trsr_count = 0
+    trsr_total = 0
+    curRoomID = 0
+
+    while curRoomID < 512:
+        for sublist in Data.treasureList:
+            if sublist[0] == curRoomID:
+                trsr_count += 1
+                trsr_total += 1
+        trsr_countMemory = trsr_count
+        trsr_count = trsr_total - trsr_countMemory
+        while trsr_count < trsr_total:
+            for item in Data.treasureList[trsr_count][1:]:
+                trsr_data.append(item.to_bytes())
+            trsr_count += 1
+        trsr_pointerCurrent = (len(b''.join(trsr_data)) + 0x08D40000).to_bytes(4, "little")
+        trsr_pointer.append(trsr_pointerCurrent)
+        trsr_count = 0
+        trsr_data.append(trsr_countMemory.to_bytes())
+        trsr_data.append((trsr_total - trsr_countMemory).to_bytes(2, "little"))
+        if trsr_countMemory > 0:
+            trsr_data.append((trsr_countMemory * 8).to_bytes(2, "little"))
+        curRoomID += 1
+
+    patch.write_token(APTokenTypes.WRITE,0xD40000, b''.join(trsr_data))
+    patch.write_token(APTokenTypes.WRITE,0x51FA00, b''.join(trsr_pointer))
+
+    if world.options.coins != 2:
+        for location in [location for location in all_locations if location in specialCoins]:
+            patch.write_token(APTokenTypes.WRITE, location.id - 5, bytes([0x70, 0x70]))
+    else:
+        for item in Data.deactivate_object_blocks[:]:
+            patch.write_token(APTokenTypes.WRITE, item, bytes([0xE0]))
 
 def swap_colors(world: "MLSSWorld", patch: MLSSProcedurePatch, color: int, bro: int,
                 pants_option: Optional[bool] = False):

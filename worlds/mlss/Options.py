@@ -59,6 +59,8 @@ class RandomSounds(Toggle):
 class MarioColor(Choice):
     """
     This changes the color of Mario's hat, as well as some key colors that are red including UI etc.
+    Randomized option is an alternative to "random" that has logic in the randomization,
+    I.E. not allowing the same colors as Mario's pants, and not randomizing to Silhouette/Chaos/True Chaos, and being different from Luigi's hat colors.
     """
 
     display_name = "Mario's Color"
@@ -75,11 +77,14 @@ class MarioColor(Choice):
     option_silhouette = 10
     option_chaos = 11
     option_true_chaos = 12
+    option_randomized = -1
     default = 0
 
 class LuigiColor(Choice):
     """
     This changes the color of Luigi's hat, as well as some key colors that are green including UI etc.
+    Randomized option is an alternative to "random" that has logic in the randomization,
+    I.E. not allowing the same colors as Luigi's pants, and not randomizing to Silhouette/Chaos/True Chaos, and being different from Mario's hat colors.
     """
 
     display_name = "Luigi's Color"
@@ -96,11 +101,14 @@ class LuigiColor(Choice):
     option_silhouette = 10
     option_chaos = 11
     option_true_chaos = 12
+    option_randomized = -1
     default = 1
 
 class MarioPants(Choice):
     """
     This changes the color of Mario's trousers.
+    Randomized option is an alternative to "random" that has logic in the randomization,
+    I.E. not allowing the same colors as Mario's hat, and not randomizing to Chaos.
     """
 
     display_name = "Mario's Pants Color"
@@ -116,11 +124,14 @@ class MarioPants(Choice):
     option_black = 9
     option_white = 10
     option_chaos = 11
+    option_randomized = -1
     default = 0
 
 class LuigiPants(Choice):
     """
     This changes the color of Luigi's trousers.
+    Randomized option is an alternative to "random" that has logic in the randomization,
+    I.E. not allowing the same colors as Luigi's hat, and not randomizing to Chaos.
     """
 
     display_name = "Luigi's Pants Color"
@@ -136,6 +147,7 @@ class LuigiPants(Choice):
     option_black = 9
     option_white = 10
     option_chaos = 11
+    option_randomized = -1
     default = 0
 
 class RandomizeEnemies(Choice):

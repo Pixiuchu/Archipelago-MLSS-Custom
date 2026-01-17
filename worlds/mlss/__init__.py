@@ -72,6 +72,13 @@ class MLSSWorld(World):
                 logging.warning(
                     f"{self.player_name}'s number of emblems required is greater than the number of emblems available. "
                     f"Changing to {self.options.emblems_required.value}.")
+        if -1 in {self.options.mario_color.value, self.options.mario_pants.value, self.options.luigi_color.value, self.options.luigi_color.value}:
+            m_color = self.random.choice(range(10)) if self.options.mario_color.value == -1 else self.options.mario_color.value
+            l_color = self.random.choice([i for i in range(10) if i != m_color]) if self.options.luigi_color.value == -1 else self.options.luigi_color.value
+            m_pants = self.random.choice([i for i in range(11) if i != m_color + 1]) if self.options.mario_pants.value == -1 else self.options.mario_pants.value
+            l_pants = self.random.choice([i for i in range(11) if i != l_color + 1]) if self.options.luigi_pants.value == -1 else self.options.luigi_pants.value
+            self.options.mario_color.value, self.options.mario_pants.value = m_color, m_pants
+            self.options.luigi_color.value, self.options.luigi_pants.value = l_color, l_pants
         if self.options.skip_minecart:
             self.disabled_locations.update([LocationName.HoohooMountainBaseMinecartCaveDigspot])
         if self.options.disable_surf:

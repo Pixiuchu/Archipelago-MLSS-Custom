@@ -521,6 +521,8 @@ def write_tokens(world: "MLSSWorld", patch: MLSSProcedurePatch) -> None:
 
     patch.write_token(APTokenTypes.WRITE, 0x25FE57, bytes([0x48, 0x30, 0x08, 0x80, 0xE4, 0x0, 0xF]))
 
+    patch.write_token(APTokenTypes.WRITE, 0x3A79C0, bytes([0x16])) #Add song to room 0x09
+
     if world.options.extra_pipes:
         patch.write_token(APTokenTypes.WRITE, 0xD00001, bytes([0x1]))
 

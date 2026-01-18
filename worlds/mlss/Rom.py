@@ -57,15 +57,20 @@ class MLSSPatchExtension(APPatchExtension):
     @staticmethod
     def randomize_music(caller: APProcedurePatch, rom: bytes):
         options = json.loads(caller.get_file("options.json").decode("UTF-8"))
-        if options["music_options"] != 1:
+        if options["music_options"] in {0, 3}:
             return rom
         stream = io.BytesIO(rom)
         random.seed(options["seed"] + options["player"])
 
         songs = []
+        removed_songs = [0x21CBD8, 0x21CBDC]
+
+        if options["music_options"] == 1:
+            removed_songs.extend([0x21CB74, 0x21CB78, 0x21CB88, 0x21CB8C, 0x21CC1C, 0x21CC24, 0x21CC28, 0x21CC2C])
+
         stream.seek(0x21CB74)
         for _ in range(50):
-            if stream.tell() == 0x21CBD8:
+            if stream.tell() in removed_songs:
                 stream.seek(4, 1)
                 continue
             temp = stream.read(4)
@@ -74,7 +79,7 @@ class MLSSPatchExtension(APPatchExtension):
         random.shuffle(songs)
         stream.seek(0x21CB74)
         for _ in range(50):
-            if stream.tell() == 0x21CBD8:
+            if stream.tell() in removed_songs:
                 stream.seek(4, 1)
                 continue
             stream.write(songs.pop())
@@ -541,7 +546,7 @@ def write_tokens(world: "MLSSWorld", patch: MLSSProcedurePatch) -> None:
     if world.options.tattle_hp:
         patch.write_token(APTokenTypes.WRITE, 0xD00000, bytes([0x1]))
 
-    if world.options.music_options == 2:
+    if world.options.music_options == 3:
         patch.write_token(APTokenTypes.WRITE, 0x19B118, bytes([0x0, 0x25]))
 
     if world.options.coins != 0:

@@ -38,7 +38,9 @@ class MusicOptions(Choice):
 
     Default: Music will be untouched.
 
-    Randomize: Music will be randomized.
+    Randomize: Music will be randomized, however unused tracks are not included.
+
+    Randomize All: All music will be randomized.
 
     Disable: All music will be disabled. No music will play throughout the entire game.
     """
@@ -46,7 +48,8 @@ class MusicOptions(Choice):
     display_name = "Music Options"
     option_default = 0
     option_randomize = 1
-    option_disable = 2
+    option_randomize_all = 2
+    option_disable = 3
     default = 0
 
 class RandomSounds(Toggle):

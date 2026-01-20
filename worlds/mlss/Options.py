@@ -343,7 +343,7 @@ class RandomizeBPCost(Choice):
 
     Reverse Balanced: Mode 3 always cost more than Modes 1 and 2.
 
-    Fully Random: It is fully random with zero balancing. Moves cost between 1 and 15 BP.
+    Completely Random: It is fully random with zero balancing. Moves cost between 1 and 15 BP.
 
     For both Balanced and Reverse Balanced, stronger moves cost more BP on average.
     """
@@ -351,7 +351,7 @@ class RandomizeBPCost(Choice):
     option_vanilla = 0
     option_balanced = 1
     option_reverse_balanced = 2
-    option_fully_random = 3
+    option_completely_random = 3
     default = 0
 
 class RandomizeHealItemValue(Choice):
@@ -362,11 +362,11 @@ class RandomizeHealItemValue(Choice):
 
     Progressive: Better items heal more.
 
-    Fully Random: Heal values are fully random with zero balancing. Items heal between 5 and 150 HP/BP.
+    Completely Random: Heal values are fully random with zero balancing. Items heal between 5 and 150 HP/BP.
     """
     option_vanilla = 0
     option_progressive = 1
-    option_fully_random = 2
+    option_completely_random = 2
     display_name = "Randomize Heal Item Values"
 
 class RandomizeCoffeeValues(Choice):
@@ -377,13 +377,30 @@ class RandomizeCoffeeValues(Choice):
 
     Consistent: All coffee increase by the same value. Teeheespresso will give more than the other coffees.
 
-    Fully Random: All coffee have completely random values.
+    Completely Random: All coffee have completely random values.
     """
     display_name = "Randomize Coffee Values"
     option_vanilla = 0
     option_consistent = 1
-    option_fully_random = 2
+    option_completely_random = 2
     default = 0
+
+class RandomizeEquipmentData(Choice):
+    """
+    Randomize the equipment data.
+    Specifically, this randomizes the stats, effects, which brother can wear it (for clothing), and the descriptions.
+    This does not affect whether gear are in the item pool or not.
+
+    Vanilla: Does not randomize equipment data.
+
+    Shuffle: Shuffles the equipment data amongst each other. The starting equipment are not shuffled.
+
+    Completely Random: Everything is completely random.
+    """
+    display_name = "Randomize Equipment Data"
+    option_vanilla = 0
+    option_shuffle = 1
+    option_completely_random = 2
 
 mlss_option_groups = [
     OptionGroup("Logic Options", [
@@ -399,20 +416,21 @@ mlss_option_groups = [
         SkipBowsersCastle,
         DifficultLogic,
     ]),
-    OptionGroup("Enemy Randomization", [
+    OptionGroup("Battle Options", [
         RandomizeEnemies,
         RandomizeBosses,
         ScaleStats,
         XPMultiplier,
         TattleHp,
     ]),
-    OptionGroup("Extras", [
+    OptionGroup("Extra Options", [
         ExtraPipes,
         HiddenVisible,
         RandomizeBackgrounds,
         RandomizeBPCost,
         RandomizeHealItemValue,
         RandomizeCoffeeValues,
+        RandomizeEquipmentData,
         MusicOptions,
         RandomSounds,
         MarioColor,
@@ -449,6 +467,7 @@ class MLSSOptions(PerGameCommonOptions):
     randomize_bros_move_cost: RandomizeBPCost
     randomize_heal_item_value: RandomizeHealItemValue
     randomize_coffee_values: RandomizeCoffeeValues
+    randomize_equipment_data: RandomizeEquipmentData
     tattle_hp: TattleHp
     mario_color: MarioColor
     luigi_color: LuigiColor

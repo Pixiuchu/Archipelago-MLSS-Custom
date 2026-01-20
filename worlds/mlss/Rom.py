@@ -454,6 +454,145 @@ class MLSSPatchExtension(APPatchExtension):
 
         return stream.getvalue()
 
+    @staticmethod
+    def randomize_equipment_data(caller: APProcedurePatch, rom: bytes):
+        options = json.loads(caller.get_file("options.json").decode("UTF-8"))
+        if options["randomize_equipment_data"] == 0:
+            return rom
+        stream = io.BytesIO(rom)
+
+        def randomize_equipment_function(starting_address, gear_count, stat1, stat2, gear_type, new_description_pointer):
+            new_pointer = new_description_pointer
+            if options["randomize_equipment_data"] == 1:
+                gear_list = []
+                stream.seek(starting_address)
+                current_gear = 0
+                while current_gear < gear_count:
+                    gear_sub_list = []
+                    if gear_type == "Clothing" and current_gear == 0:
+                        current_gear += 2 # Do not shuffle Work Jeans and Work Pants
+                    elif gear_type == "Badges" and current_gear == 1:
+                        current_gear += 1 # Do not shuffle Castle Badge
+                    stream.seek(starting_address + (current_gear * 20) + 4)
+                    gear_sub_list.extend([stream.read(16)])
+
+                    # Shuffle the descriptions together
+                    stream.seek(starting_address + (current_gear * 20))
+                    stream.seek(int.from_bytes(stream.read(3),"little")) # Go to pointer
+                    stream.seek(int.from_bytes(stream.read(3),"little") + 4) # Go to pointer again
+                    stream.seek(int.from_bytes(stream.read(3), "little")) # Go to pointer AGAIN
+                    description_array = b''
+                    while not description_array.endswith(b"\x00"):
+                        description_array += stream.read(1)
+                    gear_sub_list.extend([description_array])
+
+                    gear_list.append(gear_sub_list)
+                    current_gear += 1
+
+                current_gear = 0
+                random.shuffle(gear_list)
+                while current_gear < gear_count:
+                    # Write the shuffled gear data
+                    if gear_type == "Clothing" and current_gear == 0:
+                        current_gear += 2
+                    elif gear_type == "Badges" and current_gear == 1:
+                        current_gear += 1
+                    stream.seek(starting_address + (current_gear * 20) + 4)
+                    stream.write(bytes(gear_list[0][0]))
+
+                    # Write the shuffled description
+                    stream.seek(starting_address + (current_gear * 20))
+                    stream.seek(int.from_bytes(stream.read(3),"little")) # Go to pointer
+                    stream.seek(int.from_bytes(stream.read(3),"little") + 4) # Go to pointer again
+                    stream.write(int.to_bytes(new_pointer, 3, "little"))
+                    stream.seek(new_pointer)
+                    stream.write(gear_list[0][1])
+                    new_pointer += len(gear_list[0][1])
+                    gear_list.pop(0)
+
+                    current_gear += 1
+
+            else: # if option is 2
+                gear_list = []
+                effects_list = [stat1, stat2, 0xFF]
+                description_list = []
+
+                if gear_type == "Badges":
+                    effects_list.extend([0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09])
+                else:
+                    effects_list.extend([0x0A, 0x0B, 0x0C, 0x0D, 0x10, 0x12, 0x13, 0x14, 0x15, 0x16, 0x18])
+
+                current_gear = 0
+                stream.seek(starting_address)
+                while current_gear < gear_count:
+                    gear_sub_list = []
+                    stream.seek(starting_address + (current_gear * 20) + 4)
+                    gear_sub_list.extend(stream.read(2))
+
+                    effect1 = random.choices([stat1, stat2], [80,20])[0]
+                    gear_sub_list.extend([effect1, 0x00]) #Type effect
+                    gear_sub_list.extend([int(random.triangular(8, 121, 20)), 0x00]) #Stat gain: favour lower numbers, but allow higher numbers
+
+                    effect2_list = [x for x in effects_list if x not in {stat1, effect1}]
+                    effect2_weights = [
+                        3 if (x in {stat2, 0xFF})
+                        else 0.5 if x == 0x08 # Shroom Force should be less likely
+                        else 1 for x in effect2_list
+                    ]
+                    effect2 = random.choices(effect2_list, effect2_weights)[0]
+                    gear_sub_list.extend([effect2, 0x00])
+                    if effect2 in {stat1, stat2}:
+                        gear_sub_list.extend([int(random.triangular(2, 81, 10)), 0x00])
+                    else:
+                        gear_sub_list.extend([0x00, 0x00])
+                    stream.seek(starting_address + (current_gear * 20) + 14)
+                    gear_sub_list.extend(stream.read(3))
+                    if gear_type == "Clothing":
+                        if current_gear == 0:
+                            gear_sub_list.extend([0x01, 0x00, 0x00])
+                        if current_gear == 1:
+                            gear_sub_list.extend([0x02, 0x00, 0x00])
+                        if current_gear >= 2:
+                            gear_sub_list.extend([random.choices([0x01,0x02,0x03],[1,1,2])[0], 0x00, 0x00])
+                    else:
+                        gear_sub_list.extend([0x00, 0x00, 0x00])
+
+                    gear_list.append(gear_sub_list)
+
+                    # Separately shuffle the descriptions
+                    stream.seek(starting_address + (current_gear * 20))
+                    stream.seek(int.from_bytes(stream.read(3),"little")) # Go to pointer
+                    stream.seek(int.from_bytes(stream.read(3),"little") + 4) # Go to pointer again
+                    stream.seek(int.from_bytes(stream.read(3), "little")) # Go to pointer AGAIN
+                    description_array = b''
+                    while not description_array.endswith(b"\x00"):
+                        description_array += stream.read(1)
+                    description_list.append(description_array)
+                    current_gear += 1
+
+                random.shuffle(description_list)
+                current_gear = 0
+                while current_gear < gear_count:
+                    stream.seek(starting_address + (current_gear * 20) + 4)
+                    stream.write(bytes(gear_list.pop(0)))
+
+                    # Write the shuffled description
+                    stream.seek(starting_address + (current_gear * 20))
+                    stream.seek(int.from_bytes(stream.read(3),"little")) # Go to pointer
+                    stream.seek(int.from_bytes(stream.read(3),"little") + 4) # Go to pointer again
+                    stream.write(int.to_bytes(new_pointer, 3, "little"))
+                    stream.seek(new_pointer)
+                    stream.write(description_list[0])
+                    new_pointer += len(description_list[0].pop(0))
+
+                    current_gear += 1
+
+        randomize_equipment_function(0x3BD844, 44, 0x66, 0x65, "Badges", 0xD39A00) # Randomize Badge Data
+        randomize_equipment_function(0x3BE67C, 46, 0x67, 0x64, "Clothing", 0xD3A000) # Randomize Clothing Data
+
+        return stream.getvalue()
+
+
 class MLSSProcedurePatch(APProcedurePatch, APTokenMixin):
     game = "Mario & Luigi Superstar Saga"
     hash = "4b1a5897d89d9e74ec7f630eefdfd435"
@@ -471,6 +610,7 @@ class MLSSProcedurePatch(APProcedurePatch, APTokenMixin):
         ("randomize_bros_move_cost", []),
         ("randomize_heal_item_value", []),
         ("randomize_coffee_values", []),
+        ("randomize_equipment_data", []),
     ]
 
     @classmethod
@@ -486,6 +626,7 @@ def write_tokens(world: "MLSSWorld", patch: MLSSProcedurePatch) -> None:
         "randomize_bros_move_cost": world.options.randomize_bros_move_cost.value,
         "randomize_heal_item_value": world.options.randomize_heal_item_value.value,
         "randomize_coffee_values": world.options.randomize_coffee_values.value,
+        "randomize_equipment_data": world.options.randomize_equipment_data.value,
         "castle_skip": world.options.castle_skip.value,
         "randomize_sounds": world.options.randomize_sounds.value,
         "music_options": world.options.music_options.value,

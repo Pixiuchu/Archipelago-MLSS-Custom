@@ -77,10 +77,17 @@ class MLSSPatchExtension(APPatchExtension):
             songs.append(temp)
 
         random.shuffle(songs)
+        unlooped_songs = {b'\xA0\xB8\x1C\x08', b'\x38\xFF\x19\x08'}
+        while songs[0] in unlooped_songs:
+            random.shuffle(songs)
+
         stream.seek(0x21CB74)
         for _ in range(50):
             if stream.tell() in removed_songs:
                 stream.seek(4, 1)
+                continue
+            if stream.tell() == 0x21CBA0 and songs[-1] in unlooped_songs:
+                stream.write(songs.pop(0))
                 continue
             stream.write(songs.pop())
 
@@ -583,7 +590,7 @@ class MLSSPatchExtension(APPatchExtension):
                     stream.write(int.to_bytes(new_pointer, 3, "little"))
                     stream.seek(new_pointer)
                     stream.write(description_list[0])
-                    new_pointer += len(description_list[0].pop(0))
+                    new_pointer += len(description_list.pop(0))
 
                     current_gear += 1
 

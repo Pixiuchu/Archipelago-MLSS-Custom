@@ -713,6 +713,8 @@ def write_tokens(world: "MLSSWorld", patch: MLSSProcedurePatch) -> None:
     if world.options.randomize_bosses != 0:
         patch.write_token(APTokenTypes.WRITE, 0xD00018, bytes([world.options.randomize_bosses.value]))
 
+    move_blocks(world, patch)
+
     for location_name in location_table.keys():
         if location_name in world.disabled_locations:
             continue
@@ -728,7 +730,6 @@ def write_tokens(world: "MLSSWorld", patch: MLSSProcedurePatch) -> None:
     swap_colors(world, patch, world.options.mario_color.value, 0)
     swap_colors(world, patch, world.options.luigi_color.value, 1)
 
-    move_blocks(world, patch)
 
     patch.write_file("token_data.bin", patch.get_token_binary())
 
